@@ -17,7 +17,7 @@ La arquitectura está en fase de propuesta. No des por elegidas tecnologías pen
 - Revisa `git status`, la rama actual y los cambios existentes antes de editar. Conserva el trabajo del usuario o de otros colaboradores.
 - Consulta la issue de la tarea. Si no existe y el encargo incluye implementarla en el repositorio, crea una issue acotada antes de empezar. Usa responsables acordados y cuentas verificadas; no inventes el usuario de Carlos.
 - Trabaja en una rama `<tipo>/<issue>-<descripcion-en-ingles>` creada desde `main` actualizado. No mezcles tareas sin relación.
-- Usa Conventional Commits, con título en inglés y referencia real `Refs: #numero` en el pie. La documentación y las explicaciones al equipo van en español.
+- Usa Conventional Commits, con título en inglés y referencia real a la issue al final del título: `tipo(ambito): descripcion [refs #numero]`. Una referencia únicamente en el cuerpo no cumple esta regla. La documentación y las explicaciones al equipo van en español.
 - Completa las comprobaciones pertinentes, revisa el diff y publica la rama y el PR cuando formen parte del encargo. Usa la plantilla de PR y explica resultados y limitaciones reales.
 - Usa `Closes #numero` en el PR solo si completa la issue; para entregas parciales, `Refs: #numero`.
 - La integración requiere revisión humana del compañero. No la simules ni integres automáticamente un PR sin ella y sin autorización para integrar.
@@ -35,5 +35,7 @@ La arquitectura está en fase de propuesta. No des por elegidas tecnologías pen
 ## Excepción histórica y límites
 
 La documentación inicial asociada a la issue #1 tiene autorización expresa para commit y push directo a `main` sin PR. La excepción termina al publicar esa primera entrega y no se extiende a trabajos posteriores.
+
+El 25 de noviembre de 2026, el usuario pidió trasladar las referencias a los títulos de los commits ya publicados. Se corrigieron los mensajes de las entregas #1 y #2 y su integración, conservando los archivos y la autoría. Esta corrección puntual del historial no autoriza futuras reescrituras de `main`; la nueva convención se recoge en la issue #4.
 
 Respeta las instrucciones expresas del usuario para la tarea actual. Si autoriza otra excepción al flujo, documenta su alcance; no conviertas una excepción puntual en una regla permanente. Las protecciones de ramas y la CI no deben darse por activas solo porque esta guía las describa.

@@ -65,17 +65,18 @@ Antes de cambiar de rama, revisamos `git status`. Si hay trabajo pendiente, lo c
 
 ## 3. Escribir commits que cuenten el cambio
 
-Usamos [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) y añadimos una regla propia: **cada commit de trabajo debe referenciar una issue real** con `Refs: #numero` en el pie del mensaje.
+Usamos [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) y añadimos una regla propia: **cada commit de trabajo debe referenciar una issue real en el título**, con el sufijo `[refs #numero]`. Así la relación con la tarea se ve directamente en el historial, sin desplegar el mensaje. Una referencia únicamente en el cuerpo no cumple esta regla.
 
 Los mensajes de commit y los títulos de PR van en inglés, con una descripción breve en imperativo. Las issues, las explicaciones de los PR y la documentación van en español. Así mantenemos un historial consistente y una conversación cómoda para el equipo.
 
 ```text
-feat(api): register robots with persistent identifiers
+feat(api): register robots with persistent identifiers [refs #12]
 
 Store robot registrations so clients can reconnect with the same identity.
 
-Refs: #12
 ```
+
+Si un cambio está relacionado con varias issues, indicamos sus números en el mismo sufijo, por ejemplo `[refs #12, #18]`. Los números de los ejemplos deben sustituirse por issues reales.
 
 | Tipo | Cuándo usarlo |
 | :--- | :--- |
@@ -100,7 +101,7 @@ git diff
 git add ruta/al/archivo
 git diff --cached
 git diff --cached --check
-git commit -m "feat(api): register robots with persistent identifiers" -m "Refs: #12"
+git commit -m "feat(api): register robots with persistent identifiers [refs #12]"
 ```
 
 Las rutas y el número de estos ejemplos son orientativos. Seleccionamos los archivos de nuestra tarea; no incorporamos cambios del compañero por accidente. Conservamos la autoría real configurada en Git y no atribuimos revisiones ni contribuciones a personas que no las hayan realizado.
@@ -113,7 +114,7 @@ Publicamos la rama y abrimos un PR hacia `main`. Si la implementación sigue en 
 git push -u origin feat/12-register-robots
 ```
 
-El título sigue el formato de los commits. La descripción usa la plantilla del repositorio para explicar qué cambia, cómo se comprobó y qué limitaciones quedan. Los cambios visuales incluyen una captura o ilustración cuando ayude a revisarlos.
+El título sigue el formato de los commits, incluido el sufijo `[refs #numero]` con la issue de trabajo. El número de un PR no sustituye a la referencia a su issue. La descripción usa la plantilla del repositorio para explicar qué cambia, cómo se comprobó y qué limitaciones quedan. Los cambios visuales incluyen una captura o ilustración cuando ayude a revisarlos.
 
 Usamos `Closes #12` en la descripción cuando el PR completa la issue. GitHub la cerrará al integrar el PR en la rama predeterminada, que aquí es `main`. Si solo aporta una parte, usamos `Refs: #12` y mantenemos la issue abierta. Reservamos las palabras de cierre para el PR, en lugar de cerrar tareas desde commits intermedios. [Referencia de GitHub](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
 
@@ -132,7 +133,7 @@ Para considerar una entrega terminada:
 - El compañero ha aprobado la versión vigente y se han resuelto sus observaciones.
 - Los controles automatizados exigidos pasan, cuando existan.
 
-Si se modifica el comportamiento después de una aprobación, se solicita una nueva revisión. La integración habitual será **Squash and merge**: un commit por PR en `main`. Antes de confirmar el squash, revisamos su título y mantenemos `Refs: #numero` en el mensaje para conservar la referencia a la tarea.
+Si se modifica el comportamiento después de una aprobación, se solicita una nueva revisión. La integración habitual será **Squash and merge**: un commit por PR en `main`. Antes de confirmar el squash, revisamos que su título conserve `[refs #numero]` con la issue de trabajo. Si se acuerda una integración mediante merge, su commit también debe incluir ese sufijo en el título.
 
 Después de integrar, comprobamos que la issue se haya cerrado si correspondía, eliminamos la rama remota terminada y actualizamos nuestra copia local de `main`. No cerramos una tarea únicamente porque se haya subido una rama.
 
@@ -157,3 +158,9 @@ Queda pendiente comprobar el acceso de Carlos y configurar en GitHub la protecci
 ### Excepción de la entrega inicial
 
 El 25 de noviembre de 2026, el propietario autorizó expresamente subir la documentación inicial directamente a `main`, sin PR. El trabajo se sigue en la [issue #1](https://github.com/mglezz/switchyard/issues/1) y sus commits deben referenciarla. Esta excepción solo cubre esa entrega; no autoriza futuros cambios directos en `main`.
+
+### Corrección puntual de los títulos publicados
+
+Ese mismo día, el propietario pidió que las referencias aparecieran en los títulos y que se corrigieran los commits existentes. Se actualizaron los mensajes de las entregas #1 y #2 y del commit de integración del PR #3. Se conservaron los árboles de archivos, la autoría y la estructura de padres, con una copia local del historial anterior y una publicación condicionada a que las ramas remotas no hubieran avanzado.
+
+Cambiar el mensaje cambia el identificador del commit; una firma criptográfica del commit anterior no se puede trasladar al nuevo. Las copias locales basadas en el historial anterior deben sincronizarse con cuidado, conservando antes cualquier trabajo pendiente. Esta excepción no cambia la regla habitual de evitar reescrituras en `main` o ramas compartidas. La actualización de esta guía se sigue en la [issue #4](https://github.com/switchyard-project/switchyard/issues/4).
