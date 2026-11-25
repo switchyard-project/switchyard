@@ -11,9 +11,9 @@ Cada tarea tendrá una persona responsable y la otra revisará el resultado. No 
 | Integrante | Cuenta de GitHub | Papel en cada tarea |
 | :--- | :--- | :--- |
 | Marcos | [@mglezz](https://github.com/mglezz) | Responsable o revisor, según la issue. |
-| Carlos | Pendiente de registrar | Responsable o revisor, según la issue. |
+| Carlos | [@carlosvaldesbarquin](https://github.com/carlosvaldesbarquin) | Responsable o revisor, según la issue. |
 
-El reparto real vive en las **issues**, no en esta tabla. Usamos el campo **Assignees** para indicar quién responde de la tarea. Hasta conocer la cuenta de Carlos y comprobar su acceso, podemos escribir su nombre en la descripción, dejando claro que la asignación en GitHub está pendiente. Nunca inventamos usuarios ni asignamos trabajo al compañero sin haberlo acordado.
+El reparto real vive en las **issues**, no en esta tabla. Usamos el campo **Assignees** para indicar quién responde de la tarea. Ambas cuentas tienen acceso al repositorio. No asignamos trabajo al compañero sin haberlo acordado; la revisión se solicita en el PR.
 
 ## 1. Definir la tarea antes de empezar
 
@@ -139,7 +139,15 @@ Después de integrar, comprobamos que la issue se haya cerrado si correspondía,
 
 ## Validar sin inventar resultados
 
-Las comprobaciones dependen del cambio. En documentación revisamos enlaces, ejemplos y gráficos. Cuando exista código, incluiremos los comandos reales de compilación y pruebas, y verificaremos los escenarios relevantes. Los cambios en API o persistencia necesitarán comprobar la integración; los de coordinación, los conflictos entre clientes.
+Las comprobaciones dependen del cambio. En documentación revisamos enlaces, ejemplos y gráficos. Para el código actual ejecutamos:
+
+```bash
+dotnet build Switchyard.sln --configuration Release
+dotnet test Switchyard.sln --configuration Release --no-build
+dotnet format Switchyard.sln --verify-no-changes --no-restore
+```
+
+El [workflow de .NET](../.github/workflows/dotnet.yml) repite compilación, pruebas y formato en Linux y Windows al abrir un PR hacia `main` y al actualizar esa rama. Revisamos sus resultados antes de integrar. Los cambios en API o persistencia necesitan comprobar la integración; los de coordinación, los conflictos entre clientes. La [guía de ejecución](ejecucion.md) permite repetir la demo con procesos independientes.
 
 No escribimos «tests OK» si no se han ejecutado. Si algo no puede verificarse, indicamos qué falta y por qué. Las decisiones importantes de arquitectura se recogen en `docs/`, con su motivo y sus consecuencias, para que no dependan de recordar una conversación.
 
@@ -151,9 +159,9 @@ La persona responsable sigue siendo responsable del resultado. Antes de integrar
 
 ## Qué está preparado y qué queda por configurar
 
-Esta entrega incorpora la guía, `AGENTS.md`, plantillas de issues y una plantilla de PR. **Estos archivos orientan el trabajo; por sí solos no bloquean pushes ni obligan a revisar.**
+El repositorio incluye esta guía, `AGENTS.md`, plantillas de issues y PR, y un workflow de compilación, pruebas y formato. **Estos archivos orientan y comprueban el trabajo; por sí solos no bloquean pushes ni obligan a revisar.**
 
-Queda pendiente comprobar el acceso de Carlos y configurar en GitHub la protección de `main`: PR obligatorio, al menos una aprobación del compañero, resolución de conversaciones y revisión renovada tras cambios. Los checks obligatorios se añadirán cuando exista una automatización real. No damos por activada ninguna de estas protecciones en esta entrega. [Referencia sobre ramas protegidas](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches).
+Queda pendiente verificar o configurar en GitHub la protección de `main`: PR obligatorio, al menos una aprobación del compañero, resolución de conversaciones y revisión renovada tras cambios. Los checks de Linux y Windows deben seleccionarse como obligatorios en esa configuración para impedir integrar con fallos. No damos por activada ninguna de estas protecciones solo por incluir el workflow. [Referencia sobre ramas protegidas](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches).
 
 ### Excepción de la entrega inicial
 

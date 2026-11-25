@@ -16,7 +16,7 @@
   <a href="docs/README.md">Documentación técnica</a>
 </p>
 
-> **Estamos empezando.** Switchyard está en fase de diseño. Este repositorio contiene la presentación del proyecto y su propuesta inicial de arquitectura. La simulación, la API y los clientes todavía no están implementados. Las imágenes muestran el concepto, no capturas de una aplicación funcionando.
+> **Primera funcionalidad disponible:** un cliente .NET registra su identificador en la API y el servidor lo guarda en SQLite. Ya podemos consultar los registros y conservarlos tras reiniciar. La simulación, el movimiento y la coordinación de rutas siguen pendientes. Las imágenes muestran el concepto, no capturas de la aplicación.
 
 ## La idea
 
@@ -81,7 +81,7 @@ flowchart LR
 - **La base de datos** conservará el mapa, las tareas, el último estado conocido de los robots y los eventos necesarios para seguir la actividad. Al reiniciar, habrá que comprobar ese estado antes de reanudar movimientos.
 - **El panel** permitirá ver la simulación y preparar escenarios. El cliente .NET exigido por la asignatura será cada robot; el panel será una interfaz adicional cuya tecnología está por decidir.
 
-La propuesta inicial usa **REST con mensajes JSON**. La tecnología del servidor, el motor de base de datos y el frontend se elegirán antes de implementar. Las decisiones y sus motivos se recogerán en la [documentación técnica](docs/README.md).
+La primera entrega usa **REST con mensajes JSON**, un servidor **ASP.NET Core sobre .NET 10** y **SQLite**. El frontend sigue pendiente. Las decisiones y sus motivos están en la [documentación técnica](docs/README.md).
 
 ### Dónde entra el trabajo en paralelo
 
@@ -108,17 +108,35 @@ El mayor riesgo del proyecto es intentar resolver toda la robótica de un almac�
 
 | Etapa | Qué queremos ver funcionando |
 | :--- | :--- |
+| **0 · Presentarnos al servidor — disponible** | Un cliente .NET registra un robot; la API permite consultarlo y conserva el alta en SQLite. |
 | **1 · Una entrega completa** | Un cliente .NET se conecta a la API, recibe una tarea y guarda su progreso en la base de datos. |
 | **2 · Un almacén compartido** | Varios robots se desplazan con reservas de espacio y esperas visibles. |
 | **3 · Rutas en paralelo** | El servidor calcula varias rutas a la vez; medimos el resultado frente al cálculo secuencial. |
 | **4 · Cuando algo falla** | Introducimos obstáculos y desconexiones, detectamos bloqueos y probamos una recuperación acotada. |
 | **5 · Una demo reproducible** | Arrancamos diez procesos, mostramos el panel y documentamos cómo repetir el escenario. |
 
-Son hitos previstos, no funcionalidades terminadas. Para la primera versión quedan fuera los robots físicos, los mapas 3D, el aprendizaje automático y la alta disponibilidad del servidor. Preferimos una simulación pequeña que podamos entender, medir y defender bien.
+El registro de robots está implementado; las etapas 1 a 5 siguen previstas. Para la primera versión quedan fuera los robots físicos, los mapas 3D, el aprendizaje automático y la alta disponibilidad del servidor. Preferimos una simulación pequeña que podamos entender, medir y defender bien.
 
 ## Estado del repositorio y puesta en marcha
 
-**Todavía no hay una aplicación que ejecutar.** No existen comandos de instalación o arranque; se añadirán cuando esté lista la primera entrega completa.
+Necesitas el **SDK de .NET 10**. Desde la raíz del repositorio, compila y arranca la API en una terminal:
+
+```bash
+dotnet build Switchyard.sln --configuration Release
+dotnet run --project src/Switchyard.Api --configuration Release --no-build -- --urls http://localhost:5080
+```
+
+En otra terminal, también desde la raíz, registra un robot:
+
+```bash
+dotnet run --project src/Switchyard.Robot --configuration Release --no-build -- R01 http://localhost:5080
+```
+
+El cliente muestra la confirmación y termina. Abre [la lista de robots](http://localhost:5080/api/robots) en el navegador para ver el registro. Si repites el alta de `R01`, la API indica que ya existe; puedes probar con `R02`.
+
+Puedes detener la API con `Ctrl+C`, volver a arrancarla con el mismo comando y consultar de nuevo la lista: el alta seguirá guardada. Todavía no hay robots moviéndose ni detección de desconexiones.
+
+La [guía de ejecución](docs/ejecucion.md) explica las pruebas, la configuración y la demo paso a paso. Para entender el código y preparar la exposición, empieza por [la primera funcionalidad](docs/funcionalidades/01-registro-de-robots.md).
 
 Por ahora puedes explorar:
 
@@ -126,9 +144,15 @@ Por ahora puedes explorar:
 switchyard/
 ├── README.md                 Presentación del proyecto
 ├── AGENTS.md                 Contexto e instrucciones para asistentes de IA
-├── .github/                  Plantillas de issues y pull requests
+├── Switchyard.sln            Solución .NET
+├── src/                      API, cliente robot y contratos de mensajes
+├── tests/                    Pruebas de API, persistencia y cliente
+├── .github/                  Plantillas y comprobaciones automáticas
 └── docs/
     ├── README.md             Índice de documentación técnica
+    ├── ejecucion.md          Arranque, pruebas y demostración
+    ├── funcionalidades/      Explicación del código y preguntas para la defensa
+    ├── criterios-de-codigo.md Convenciones para desarrollar por partes
     ├── flujo-de-trabajo.md    Acuerdo de colaboración y entrega
     ├── arquitectura.md       Propuesta inicial y decisiones pendientes
     ├── identidad-visual.md   Colores, símbolo y uso de los recursos

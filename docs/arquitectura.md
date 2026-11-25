@@ -1,12 +1,21 @@
-# Arquitectura inicial
+# Arquitectura del proyecto
 
-**Estado: propuesta de trabajo.** Todavía no hay implementación. Este documento sirve para acordar un alcance entre los dos integrantes y mantener las decisiones técnicas fuera de la presentación principal.
+**Estado: registro de robots implementado; coordinación pendiente.** La primera entrega permite registrar y consultar robots mediante una API REST y conservar sus altas en SQLite. El resto de esta arquitectura describe el objetivo de la simulación. Este documento mantiene las decisiones técnicas fuera de la presentación principal.
+
+## Lo que existe hoy
+
+- `Switchyard.Api`: ASP.NET Core sobre .NET 10, con controladores para el registro y las consultas.
+- `Switchyard.Robot`: cliente de consola .NET que realiza un alta por HTTP y termina.
+- `Switchyard.Contracts`: tipos de los mensajes JSON; no contiene lógica de movimiento ni acceso a datos.
+- `Switchyard.Tests`: pruebas xUnit del contrato, el cliente y la persistencia en SQLite real.
+
+El servidor mantiene una tabla `robots` con el identificador y la fecha de alta UTC. La clave primaria impide duplicar registros, incluso ante solicitudes concurrentes. Esto todavía no permite conocer la posición o disponibilidad de un robot. El [documento de la funcionalidad](funcionalidades/01-registro-de-robots.md) recoge el contrato, los métodos y los límites de esta entrega.
 
 ## Punto de partida
 
 Los requisitos de la asignatura son una aplicación distribuida con comunicación cliente-servidor mediante REST o SOAP, conservación del estado y un cliente .NET. La tecnología del frontend es libre.
 
-Proponemos usar REST con JSON. Cada robot será un ejecutable .NET lanzado como un proceso independiente. Un servidor central recibirá las peticiones y coordinará las tareas. Una base de datos conservará el estado. El panel mostrará el almacén y permitirá introducir eventos de prueba.
+Usamos REST con JSON. Cada robot es un ejecutable .NET lanzado como un proceso independiente. Ya existe un servidor central para registrar robots; más adelante coordinará sus tareas. SQLite conserva las altas. El panel mostrará el almacén y permitirá introducir eventos de prueba cuando se implemente.
 
 Se podrá demostrar la comunicación entre procesos en un mismo ordenador. La API deberá poder configurarse por dirección para que también sea posible separar clientes y servidor en distintas máquinas.
 
@@ -57,8 +66,7 @@ También habrá que definir identificadores de operación y reglas de idempotenc
 
 | Decisión | Qué tendremos en cuenta |
 | :--- | :--- |
-| Tecnología del servidor y versiones de .NET | Experiencia del equipo, soporte y facilidad de depuración. |
-| Motor de base de datos | Transacciones, concurrencia y facilidad de preparación de la demo. |
+| Evolución de la persistencia | Empezamos con SQLite. Revisaremos migraciones y límites de concurrencia cuando incorporemos tareas y movimientos. |
 | Frontend y actualización del panel | Claridad visual y coste de implementación; empezar con la opción más sencilla que cumpla. |
 | Protocolo de turnos y reservas | Confirmaciones, tiempos de espera, prevención de conflictos y recuperación. |
 | Política de prioridades | Evitar que un robot quede esperando indefinidamente. |
@@ -74,4 +82,4 @@ También habrá que definir identificadores de operación y reglas de idempotenc
 6. Un escenario de bloqueo que active la política de recuperación o muestre que no hay una salida segura.
 7. Comparación reproducible del cálculo secuencial y paralelo.
 
-Estas comprobaciones son objetivos de desarrollo, no pruebas que ya hayan pasado.
+Estas comprobaciones de coordinación son objetivos de desarrollo. Ya se han probado el registro y la consulta por HTTP, el rechazo de duplicados simultáneos y la conservación de las altas tras reiniciar. Todavía no hay tareas, movimientos ni reservas que reanudar.
