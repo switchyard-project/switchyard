@@ -1,0 +1,33 @@
+name: .NET
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build and test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6
+        with:
+          dotnet-version: '10.0.x'
+      - name: Restore
+        run: dotnet restore Switchyard.sln
+      - name: Build
+        run: dotnet build Switchyard.sln --configuration Release --no-restore
+      - name: Test
+        run: dotnet test Switchyard.sln --configuration Release --no-build
+      - name: Check formatting
+        run: dotnet format Switchyard.sln --verify-no-changes --no-restore
