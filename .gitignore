@@ -8,7 +8,6 @@
 .DS_Store
 
 # Local data, secrets and test output
-**/data/
 *.db
 *.db-shm
 *.db-wal
