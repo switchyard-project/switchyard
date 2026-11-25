@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="170" viewBox="0 0 1200 170" role="img" aria-labelledby="title desc">
+  <title id="title">Paleta de Switchyard</title>
+  <desc id="desc">Noche #101820, papel #F4F7FB, menta #63E6BE, ámbar #FFBF69 y azul #7CB8FF.</desc>
+  <rect x="1" y="1" width="1198" height="168" rx="18" fill="#101820" stroke="#526674" stroke-width="2"/>
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="21" font-weight="700">
+    <text x="26" y="102" fill="#F4F7FB">Noche</text>
+    <rect x="244" y="8" width="232" height="154" rx="12" fill="#F4F7FB"/>
+    <text x="266" y="102" fill="#101820">Papel</text>
+    <rect x="484" y="8" width="232" height="154" rx="12" fill="#63E6BE"/>
+    <text x="506" y="102" fill="#101820">Menta</text>
+    <rect x="724" y="8" width="232" height="154" rx="12" fill="#FFBF69"/>
+    <text x="746" y="102" fill="#101820">Ámbar</text>
+    <rect x="964" y="8" width="228" height="154" rx="12" fill="#7CB8FF"/>
+    <text x="986" y="102" fill="#101820">Azul</text>
+  </g>
+  <g font-family="monospace" font-size="16">
+    <text x="26" y="133" fill="#C1CDD6">#101820</text>
+    <text x="266" y="133" fill="#101820">#F4F7FB</text>
+    <text x="506" y="133" fill="#101820">#63E6BE</text>
+    <text x="746" y="133" fill="#101820">#FFBF69</text>
+    <text x="986" y="133" fill="#101820">#7CB8FF</text>
+  </g>
+  <g font-family="monospace" font-size="13">
+    <text x="26" y="40" fill="#C1CDD6">01 / BASE</text>
+    <text x="266" y="40" fill="#101820">02 / LECTURA</text>
+    <text x="506" y="40" fill="#101820">03 / MOVIMIENTO</text>
+    <text x="746" y="40" fill="#101820">04 / ATENCIÓN</text>
+    <text x="986" y="40" fill="#101820">05 / INFORMACIÓN</text>
+  </g>
+</svg>

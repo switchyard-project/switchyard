@@ -1,1 +1,154 @@
-# switchyard
+<p align="center">
+  <img src="docs/assets/switchyard-banner.svg" alt="Switchyard. Cada robot, a su destino. Una flota, en sintonía." width="100%">
+</p>
+
+<p align="center">
+  <strong>Coordinación distribuida de robots autónomos en un almacén simulado.</strong><br>
+  Procesos independientes. Rutas compartidas. Trabajo en equipo.
+</p>
+
+<p align="center">
+  <a href="#la-idea">La idea</a> ·
+  <a href="#cómo-encaja-todo">Cómo funciona</a> ·
+  <a href="#la-demo-que-queremos-construir">La demo</a> ·
+  <a href="#por-dónde-empezamos">Hoja de ruta</a> ·
+  <a href="docs/flujo-de-trabajo.md">Cómo trabajamos</a> ·
+  <a href="docs/README.md">Documentación técnica</a>
+</p>
+
+> **Estamos empezando.** Switchyard está en fase de diseño. Este repositorio contiene la presentación del proyecto y su propuesta inicial de arquitectura. La simulación, la API y los clientes todavía no están implementados. Las imágenes muestran el concepto, no capturas de una aplicación funcionando.
+
+## La idea
+
+Un robot necesita cruzar un pasillo. Otro viene de frente. Un tercero se ha quedado parado justo en la salida.
+
+Por separado, llevar una caja de un sitio a otro parece sencillo. Cuando varios robots comparten espacio, hacen falta acuerdos: quién pasa primero, dónde espera cada uno y qué hacemos si alguien deja de responder.
+
+**Switchyard es el coordinador de ese almacén.** Cada robot será una aplicación cliente en .NET, ejecutada como un proceso independiente y conectada a un servidor mediante una API REST. El servidor organizará las tareas y los desplazamientos, y una base de datos conservará el estado del sistema.
+
+No necesitaremos robots físicos: veremos su actividad en una simulación. Eso nos permitirá introducir obstáculos, provocar fallos y observar cómo responde el conjunto.
+
+El nombre viene de los patios ferroviarios donde se organizan trenes y desvíos. Aquí cambiamos las vías por pasillos y los trenes por robots, pero la idea es la misma: coordinar muchos movimientos para que cada uno llegue a su destino.
+
+## Qué queremos conseguir
+
+| En el almacén… | Switchyard deberá… |
+| :--- | :--- |
+| Hay pedidos por mover. | Asignar tareas a los robots disponibles. |
+| Varios robots necesitan el mismo pasillo. | Organizar turnos para que no ocupen un espacio incompatible. |
+| Aparece un obstáculo. | Buscar una ruta alternativa o esperar si no hay paso. |
+| Un robot deja de responder. | Detectar la pérdida de comunicación y gestionar su tarea sin dar por libre su posición. |
+| Queremos saber qué ha pasado. | Guardar el estado y los eventos relevantes para poder consultarlos. |
+
+Nace como un proyecto de **Sistemas Distribuidos y Programación en Paralelo**, desarrollado en pareja. Queremos que también tenga sitio en un portfolio: un problema reconocible, decisiones que podamos explicar y una demostración reproducible.
+
+El caso de uso se inspira en la logística real. El resultado será un prototipo educativo; operar maquinaria física exigiría otras garantías y validaciones.
+
+## Un vistazo al almacén
+
+![Esquema conceptual de un almacén: dos robots siguen rutas separadas entre estanterías, mientras un tercero espera ante una zona reservada.](docs/assets/warehouse-concept.svg)
+
+*Vista conceptual. Los colores y las etiquetas distinguen rutas, reservas y obstáculos. El panel definitivo se construirá durante el desarrollo.*
+
+Nos gustaría que la actividad se entendiera de un vistazo: qué está haciendo cada robot, qué zonas están ocupadas y por qué alguien tiene que esperar. La simulación será también nuestra forma de explicar lo que ocurre por debajo.
+
+## Cómo encaja todo
+
+```mermaid
+flowchart LR
+    subgraph robots["Clientes independientes · .NET"]
+        R1["Robot 01"]
+        R2["Robot 02"]
+        RN["Robot …"]
+    end
+
+    R1 <-->|"API REST"| API["Servidor coordinador"]
+    R2 <-->|"API REST"| API
+    RN <-->|"API REST"| API
+    API <-->|"Guarda y consulta"| DB[("Base de datos")]
+    UI["Panel de simulación"] <-->|"Consulta y control"| API
+
+    classDef robot fill:#132B2A,stroke:#63E6BE,color:#F4F7FB
+    classDef service fill:#152538,stroke:#7CB8FF,color:#F4F7FB
+    classDef storage fill:#302719,stroke:#FFBF69,color:#F4F7FB
+    class R1,R2,RN robot
+    class API,UI service
+    class DB storage
+```
+
+- **Los robots** pedirán trabajo, comunicarán su posición y solicitarán permiso para avanzar. Cada uno tendrá su propio proceso y podrá desconectarse de forma independiente.
+- **El servidor** mantendrá una visión común del almacén: tareas, rutas y reservas de espacio. Tener una ruta calculada no significará tener permiso para recorrerla sin más.
+- **La base de datos** conservará el mapa, las tareas, el último estado conocido de los robots y los eventos necesarios para seguir la actividad. Al reiniciar, habrá que comprobar ese estado antes de reanudar movimientos.
+- **El panel** permitirá ver la simulación y preparar escenarios. El cliente .NET exigido por la asignatura será cada robot; el panel será una interfaz adicional cuya tecnología está por decidir.
+
+La propuesta inicial usa **REST con mensajes JSON**. La tecnología del servidor, el motor de base de datos y el frontend se elegirán antes de implementar. Las decisiones y sus motivos se recogerán en la [documentación técnica](docs/README.md).
+
+### Dónde entra el trabajo en paralelo
+
+Hay dos retos distintos. Por un lado, muchos robots se comunicarán y avanzarán de forma concurrente. Por otro, queremos que el servidor pueda **calcular varias rutas en paralelo** cuando reciba varias peticiones.
+
+Después habrá que comprobar que esas rutas pueden convivir. Dos cálculos correctos por separado pueden proponer el mismo pasillo a la vez: coordinar las reservas es lo que convierte las rutas individuales en un plan compartido.
+
+## La demo que queremos construir
+
+La exposición debería contar una historia que se pueda seguir sin leer el código:
+
+1. **Abrimos el almacén.** Cargamos un mapa pequeño con estanterías, puntos de recogida y destinos.
+2. **Arrancamos diez robots.** Cada uno se conecta desde su propio proceso .NET. El panel muestra cómo se incorporan.
+3. **Les damos trabajo.** Aparecen tareas y vemos cómo se reparten, se mueven y esperan cuando comparten un paso.
+4. **Cambiamos el escenario.** Añadimos un obstáculo en una celda libre. Los robots afectados deberán recalcular o esperar.
+5. **Desconectamos un robot.** El servidor detecta su ausencia. En el escenario de demostración, una tarea de recogida aún no iniciada podrá pasar a otro robot; su última posición seguirá tratándose con cautela.
+6. **Revisamos lo ocurrido.** Consultamos las tareas y los eventos guardados para explicar las decisiones del sistema.
+
+Queremos poder repetir esta demo con un escenario preparado, comprobar el resultado y responder con el código delante: quién decide, qué se guarda y qué ocurre cuando dos peticiones llegan a la vez.
+
+## Por dónde empezamos
+
+El mayor riesgo del proyecto es intentar resolver toda la robótica de un almacén antes de tener una aplicación que funcione. Por eso empezaremos con **un mapa en cuadrícula, movimientos por turnos y un único servidor coordinador**. Los robots serán procesos separados desde el principio.
+
+| Etapa | Qué queremos ver funcionando |
+| :--- | :--- |
+| **1 · Una entrega completa** | Un cliente .NET se conecta a la API, recibe una tarea y guarda su progreso en la base de datos. |
+| **2 · Un almacén compartido** | Varios robots se desplazan con reservas de espacio y esperas visibles. |
+| **3 · Rutas en paralelo** | El servidor calcula varias rutas a la vez; medimos el resultado frente al cálculo secuencial. |
+| **4 · Cuando algo falla** | Introducimos obstáculos y desconexiones, detectamos bloqueos y probamos una recuperación acotada. |
+| **5 · Una demo reproducible** | Arrancamos diez procesos, mostramos el panel y documentamos cómo repetir el escenario. |
+
+Son hitos previstos, no funcionalidades terminadas. Para la primera versión quedan fuera los robots físicos, los mapas 3D, el aprendizaje automático y la alta disponibilidad del servidor. Preferimos una simulación pequeña que podamos entender, medir y defender bien.
+
+## Estado del repositorio y puesta en marcha
+
+**Todavía no hay una aplicación que ejecutar.** No existen comandos de instalación o arranque; se añadirán cuando esté lista la primera entrega completa.
+
+Por ahora puedes explorar:
+
+```text
+switchyard/
+├── README.md                 Presentación del proyecto
+├── AGENTS.md                 Contexto e instrucciones para asistentes de IA
+├── .github/                  Plantillas de issues y pull requests
+└── docs/
+    ├── README.md             Índice de documentación técnica
+    ├── flujo-de-trabajo.md    Acuerdo de colaboración y entrega
+    ├── arquitectura.md       Propuesta inicial y decisiones pendientes
+    ├── identidad-visual.md   Colores, símbolo y uso de los recursos
+    └── assets/               Ilustraciones originales en SVG
+```
+
+## Cómo trabajamos
+
+Cada tarea tendrá una issue con responsable, una rama propia y commits que permitan seguir su historia. Los cambios llegarán a `main` mediante un pull request revisado por el compañero. Así podremos saber qué se hizo, por qué y cómo se comprobó.
+
+La [guía de trabajo](docs/flujo-de-trabajo.md) explica el proceso con ejemplos y recoge la excepción de esta primera entrega de documentación. Incluimos plantillas para facilitar las tareas y revisiones, y un [AGENTS.md](AGENTS.md) para que los asistentes de IA compartan el mismo contexto.
+
+## Una identidad para Switchyard
+
+![Paleta de Switchyard: noche #101820, papel #F4F7FB, menta #63E6BE, ámbar #FFBF69 y azul #7CB8FF.](docs/assets/switchyard-palette.svg)
+
+La identidad toma prestado el lenguaje de la señalización: líneas claras, recorridos y puntos de encuentro. El símbolo representa un desvío con tres terminales. La menta acompaña el movimiento, el ámbar señala las esperas y el azul identifica información del sistema. Los estados también llevarán texto o símbolos para que el color no sea la única pista.
+
+Los recursos están incluidos en el repositorio y se pueden editar sin depender de un servicio externo. La [guía de identidad](docs/identidad-visual.md) recoge la paleta y sus usos.
+
+---
+
+**Cada robot, a su destino. Una flota, en sintonía.**
