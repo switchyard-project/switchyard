@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-labelledby="title desc">
+  <title id="title">Un almacén, muchos recorridos</title>
+  <desc id="desc">Ilustración conceptual, no una captura de la aplicación. El robot R01 circula por arriba hacia una entrega; R02 recorre el pasillo inferior; R03 espera ante una reserva. Las estanterías y un obstáculo ocupan celdas separadas de las rutas.</desc>
+  <defs>
+    <pattern id="cells" width="56" height="56" patternUnits="userSpaceOnUse" x="48" y="136">
+      <rect x="1" y="1" width="54" height="54" rx="6" fill="#17252F"/>
+    </pattern>
+    <marker id="mint-arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10Z" fill="#63E6BE"/>
+    </marker>
+    <marker id="blue-arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10Z" fill="#7CB8FF"/>
+    </marker>
+    <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="8" height="8" fill="#342C20"/>
+      <path d="M0 0V8" stroke="#FFBF69" stroke-width="2" opacity=".5"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="640" rx="24" fill="#101820"/>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="48" y="50" fill="#63E6BE" font-size="12" font-weight="700" letter-spacing="2">EL ESCENARIO</text>
+    <text x="48" y="91" fill="#F4F7FB" font-size="30" font-weight="700">Un almacén, muchos recorridos.</text>
+    <rect x="909" y="37" width="243" height="34" rx="17" fill="#23333F"/>
+    <text x="1030" y="59" fill="#C1CDD6" font-size="13" text-anchor="middle">CONCEPTO · NO ES UNA CAPTURA</text>
+  </g>
+  <rect x="48" y="136" width="728" height="392" rx="10" fill="url(#cells)"/>
+  <g fill="#2C3F4E" stroke="#506675" stroke-width="1.5">
+    <rect x="166" y="254" width="156" height="100" rx="8"/>
+    <rect x="390" y="254" width="156" height="100" rx="8"/>
+    <rect x="614" y="254" width="100" height="100" rx="8"/>
+    <rect x="166" y="422" width="156" height="44" rx="8"/>
+    <rect x="390" y="422" width="156" height="44" rx="8"/>
+  </g>
+  <g fill="none" stroke="#506675" stroke-width="1.5">
+    <path d="M218 254V354M270 254V354M166 304H322M442 254V354M494 254V354M390 304H546M664 254V354M614 304H714M218 422V466M270 422V466M442 422V466M494 422V466"/>
+  </g>
+  <g fill="#C1CDD6" font-family="monospace" font-size="12" text-anchor="middle">
+    <text x="244" y="283">A</text><text x="468" y="283">B</text><text x="664" y="283">C</text>
+  </g>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M76 332V220H692" stroke="#63E6BE" stroke-width="5" marker-end="url(#mint-arrow)"/>
+    <path d="M132 500H580V388H692" stroke="#7CB8FF" stroke-width="5" stroke-dasharray="9 8" marker-end="url(#blue-arrow)"/>
+    <path d="M356 388V285" stroke="#FFBF69" stroke-width="4" stroke-dasharray="5 7"/>
+  </g>
+  <rect x="334" y="254" width="44" height="44" rx="7" fill="url(#hatch)" stroke="#FFBF69" stroke-width="2"/>
+  <g fill="#63E6BE"><rect x="699" y="204" width="30" height="30" rx="7"/></g>
+  <path d="M706 219L712 225L722 213" fill="none" stroke="#101820" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="699" y="372" width="30" height="30" rx="7" fill="#7CB8FF"/>
+  <path d="M706 387L712 393L722 381" fill="none" stroke="#101820" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(166 198)">
+    <rect width="44" height="44" rx="12" fill="#63E6BE" stroke="#101820" stroke-width="3"/>
+    <rect x="10" y="11" width="24" height="15" rx="5" fill="#101820"/>
+    <g fill="#63E6BE"><circle cx="17" cy="18" r="2.5"/><circle cx="27" cy="18" r="2.5"/></g>
+    <path d="M17 33H27" stroke="#101820" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(334 478)">
+    <rect width="44" height="44" rx="12" fill="#7CB8FF" stroke="#101820" stroke-width="3"/>
+    <rect x="10" y="11" width="24" height="15" rx="5" fill="#101820"/>
+    <g fill="#7CB8FF"><circle cx="17" cy="18" r="2.5"/><circle cx="27" cy="18" r="2.5"/></g>
+    <path d="M17 33H27" stroke="#101820" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(334 366)">
+    <rect width="44" height="44" rx="12" fill="#FFBF69" stroke="#101820" stroke-width="3"/>
+    <path d="M17 14V30M27 14V30" stroke="#101820" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <rect x="110" y="310" width="44" height="44" rx="7" fill="#342C20" stroke="#FFBF69" stroke-width="2"/>
+  <path d="M124 324L140 340M140 324L124 340" stroke="#FFBF69" stroke-width="3" stroke-linecap="round"/>
+  <g font-family="monospace" font-size="13" font-weight="700">
+    <text x="172" y="187" fill="#63E6BE">R01</text>
+    <text x="340" y="466" fill="#7CB8FF">R02</text>
+    <text x="389" y="393" fill="#FFBF69">R03 · ESPERA</text>
+  </g>
+  <rect x="808" y="136" width="344" height="392" rx="14" fill="#192934" stroke="#304550"/>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="832" y="173" fill="#F4F7FB" font-size="20" font-weight="700">Lo que queremos ver</text>
+    <path d="M832 193H1128" stroke="#304550"/>
+    <text x="832" y="229" fill="#63E6BE" font-size="16" font-weight="700">01 / MOVER</text>
+    <text x="832" y="257" fill="#C1CDD6" font-size="16">Cada robot sigue su ruta</text>
+    <text x="832" y="280" fill="#C1CDD6" font-size="16">hacia el punto de entrega.</text>
+    <text x="832" y="326" fill="#FFBF69" font-size="16" font-weight="700">02 / ESPERAR</text>
+    <text x="832" y="354" fill="#C1CDD6" font-size="16">Si una zona está reservada,</text>
+    <text x="832" y="377" fill="#C1CDD6" font-size="16">el siguiente robot espera.</text>
+    <text x="832" y="423" fill="#7CB8FF" font-size="16" font-weight="700">03 / COORDINAR</text>
+    <text x="832" y="451" fill="#C1CDD6" font-size="16">El servidor decide quién</text>
+    <text x="832" y="474" fill="#C1CDD6" font-size="16">puede avanzar y lo registra.</text>
+  </g>
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#C1CDD6">
+    <path d="M48 575H82" stroke="#63E6BE" stroke-width="4"/>
+    <text x="94" y="580">Ruta R01</text>
+    <path d="M240 575H274" stroke="#7CB8FF" stroke-width="4" stroke-dasharray="7 5"/>
+    <text x="286" y="580">Ruta R02</text>
+    <rect x="432" y="563" width="24" height="24" rx="4" fill="url(#hatch)" stroke="#FFBF69"/>
+    <text x="468" y="580">Reserva</text>
+    <rect x="620" y="563" width="24" height="24" rx="4" fill="#342C20" stroke="#FFBF69"/>
+    <path d="M627 570L637 580M637 570L627 580" stroke="#FFBF69" stroke-width="2"/>
+    <text x="656" y="580">Obstáculo</text>
+    <text x="1152" y="580" text-anchor="end" fill="#8EA6B5" font-size="13">SWITCHYARD / DISEÑO INICIAL</text>
+  </g>
+</svg>
