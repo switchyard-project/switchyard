@@ -1,6 +1,6 @@
 ## Qué cambia y por qué
 
-<!-- Describe el problema y el resultado. Título del PR: tipo(ambito): descripcion en ingles. -->
+<!-- Describe el problema y el resultado. Título del PR: tipo(ambito): descripcion en ingles [refs #NUMERO]. Usa el número real de la issue. -->
 
 ## Issue relacionada
 
@@ -17,7 +17,7 @@
 ## Antes de solicitar revisión
 
 - [ ] Cumple el alcance acordado y los criterios que declara resolver.
-- [ ] Los commits siguen el formato del proyecto e incluyen referencias a la issue.
+- [ ] Los títulos de los commits y del PR incluyen la issue con el sufijo [refs #NUMERO], sustituido por su número real.
 - [ ] He revisado el diff y no contiene secretos, archivos innecesarios ni cambios ajenos.
 - [ ] He realizado las comprobaciones pertinentes y explicado sus resultados y límites.
 - [ ] He actualizado la documentación afectada, o indicado que no aplica.
