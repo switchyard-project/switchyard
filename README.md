@@ -132,7 +132,7 @@ switchyard/
     ├── flujo-de-trabajo.md    Acuerdo de colaboración y entrega
     ├── arquitectura.md       Propuesta inicial y decisiones pendientes
     ├── identidad-visual.md   Colores, símbolo y uso de los recursos
-    └── assets/               Ilustraciones originales en SVG
+    └── assets/               Ilustraciones SVG e isotipo en SVG y PNG
 ```
 
 ## Cómo trabajamos
@@ -148,6 +148,8 @@ La [guía de trabajo](docs/flujo-de-trabajo.md) explica el proceso con ejemplos 
 La identidad toma prestado el lenguaje de la señalización: líneas claras, recorridos y puntos de encuentro. El símbolo representa un desvío con tres terminales. La menta acompaña el movimiento, el ámbar señala las esperas y el azul identifica información del sistema. Los estados también llevarán texto o símbolos para que el color no sea la única pista.
 
 Los recursos están incluidos en el repositorio y se pueden editar sin depender de un servicio externo. La [guía de identidad](docs/identidad-visual.md) recoge la paleta y sus usos.
+
+Para usar el símbolo como imagen de perfil, descarga el [isotipo en PNG](docs/assets/switchyard-avatar.png). También está disponible [sin fondo](docs/assets/switchyard-symbol.png) para presentaciones y documentos.
 
 ---
 
