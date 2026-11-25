@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Isotipo de Switchyard sin fondo</title>
+  <desc id="desc">Un desvío con tres terminales en color noche y fondo transparente, para usar sobre superficies claras.</desc>
+  <g fill="none" stroke="#101820" stroke-width="32" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M184 360V152M184 296L328 152"/>
+  </g>
+  <g fill="#101820">
+    <circle cx="184" cy="152" r="32"/>
+    <circle cx="328" cy="152" r="32"/>
+    <circle cx="184" cy="360" r="32"/>
+  </g>
+</svg>
