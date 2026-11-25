@@ -9,8 +9,9 @@ Antes de trabajar, lee:
 1. [README.md](README.md): propósito, alcance y estado público del proyecto.
 2. [Flujo de trabajo](docs/flujo-de-trabajo.md): acuerdo de colaboración y entrega.
 3. [Índice técnico](docs/README.md) y los documentos relevantes para la tarea.
+4. [Criterios de código](docs/criterios-de-codigo.md): legibilidad, alcance incremental, pruebas y documentación de cada funcionalidad.
 
-La arquitectura está en fase de propuesta. No des por elegidas tecnologías pendientes ni presentes funciones previstas como implementadas.
+El registro de robots está implementado con .NET 10, ASP.NET Core y SQLite. La coordinación y la simulación siguen en fase de propuesta. No des por elegidas tecnologías pendientes ni presentes funciones previstas como implementadas.
 
 ## Flujo esperado
 
@@ -30,6 +31,8 @@ La arquitectura está en fase de propuesta. No des por elegidas tecnologías pen
 - Comprueba lo que cambies con herramientas adecuadas. Para documentación, revisa enlaces y gráficos; cuando exista código, usa sus comandos reales de compilación y pruebas.
 - No inventes comandos, métricas, resultados de tests ni garantías sobre colisiones, bloqueos o recuperación.
 - Mantén alineados los contratos y ejemplos cuando cambie una API o el modelo de datos.
+- Trabaja por funcionalidades pequeñas. Documenta cada una en `docs/funcionalidades/`, incluyendo el recorrido del código, los métodos, las decisiones, las comprobaciones y preguntas que puedan surgir en la exposición.
+- Comprobaciones del código actual: `dotnet build Switchyard.sln --configuration Release`, `dotnet test Switchyard.sln --configuration Release --no-build` y `dotnet format Switchyard.sln --verify-no-changes --no-restore`.
 - Al terminar, resume los archivos o comportamientos modificados, las verificaciones, la issue y el PR o commit resultante, y cualquier impedimento pendiente.
 
 ## Excepción histórica y límites

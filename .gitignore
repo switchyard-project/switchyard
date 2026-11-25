@@ -1,0 +1,18 @@
+# Build output and local IDE state
+**/bin/
+**/obj/
+.vs/
+.idea/
+*.user
+*.suo
+.DS_Store
+
+# Local data, secrets and test output
+*.db
+*.db-shm
+*.db-wal
+.env
+.env.*
+TestResults/
+**/TestResults/
+*.trx
