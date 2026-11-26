@@ -4,6 +4,8 @@
 
 No hay movimiento, tareas de transporte, posiciones, reservas, señales de actividad ni cálculo paralelo. El cliente termina después del alta. Un registro existente **no significa que el robot esté conectado**.
 
+Este documento explica la primera entrega. El [panel web de la segunda entrega](02-panel-web.md) permite registrar y consultar desde el navegador usando estos mismos endpoints.
+
 ## Qué podemos demostrar
 
 La [guía de ejecución](../ejecucion.md) contiene los comandos. En unos minutos podemos arrancar la API, registrar `R01` con el cliente .NET, consultar el resultado en el navegador, repetir el alta para observar un conflicto y reiniciar el servidor para comprobar que el dato permanece.
@@ -151,7 +153,7 @@ API y cliente tienen procesos y memoria independientes y se comunican mediante m
 
 **¿Dónde está el requisito de cliente .NET?**
 
-En `Switchyard.Robot`, que es un ejecutable C#. El navegador solo sirve aquí para observar las consultas; no sustituye al cliente de la asignatura.
+En `Switchyard.Robot`, que es un ejecutable C#. En la primera entrega usábamos el navegador para observar las consultas; el panel posterior también permite registrar. Ese panel no sustituye al cliente .NET de la asignatura.
 
 **¿REST es un protocolo? ¿Por qué no usamos sockets directamente?**
 
