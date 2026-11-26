@@ -52,7 +52,7 @@ rsvg-convert -w 1024 -h 1024 docs/assets/switchyard-symbol.svg -o docs/assets/sw
 | Ámbar | `#FFBF69` | Esperas, reservas y situaciones que requieren atención. |
 | Azul | `#7CB8FF` | Información del sistema y rutas secundarias. |
 
-Para etiquetas sobre menta, ámbar o azul, usaremos texto noche. Los estados deben incluir también palabras o símbolos: una espera tiene que entenderse aunque no se distingan los colores. El contraste de los componentes interactivos se comprobará cuando exista una interfaz.
+Para etiquetas sobre menta, ámbar o azul, usaremos texto noche. Los estados deben incluir también palabras o símbolos: una espera tiene que entenderse aunque no se distingan los colores. El primer panel aplica esta paleta y se ha revisado visualmente y con comprobaciones de contraste mediante axe; el [documento del panel](funcionalidades/02-panel-web.md) recoge el alcance de esa revisión. Los componentes nuevos necesitarán sus propias comprobaciones.
 
 Los SVG usan una pila de fuentes de sistema (`Segoe UI`, Arial y sans-serif), sin descargas externas. Las cifras y códigos usan monospace.
 

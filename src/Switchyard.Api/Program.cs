@@ -17,6 +17,8 @@ var app = builder.Build();
 
 app.Services.GetRequiredService<RobotRepository>().Initialize();
 app.UseExceptionHandler();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.MapControllers();
 app.Run();
 

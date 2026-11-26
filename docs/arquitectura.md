@@ -1,10 +1,11 @@
 # Arquitectura del proyecto
 
-**Estado: registro de robots implementado; coordinación pendiente.** La primera entrega permite registrar y consultar robots mediante una API REST y conservar sus altas en SQLite. El resto de esta arquitectura describe el objetivo de la simulación. Este documento mantiene las decisiones técnicas fuera de la presentación principal.
+**Estado: registro de robots y panel web implementados; coordinación pendiente.** La primera entrega permite registrar y consultar robots mediante una API REST y conservar sus altas en SQLite. El resto de esta arquitectura describe el objetivo de la simulación. Este documento mantiene las decisiones técnicas fuera de la presentación principal.
 
 ## Lo que existe hoy
 
 - `Switchyard.Api`: ASP.NET Core sobre .NET 10, con controladores para el registro y las consultas.
+- `Switchyard.Api/wwwroot`: panel de registro en HTML, CSS y módulos JavaScript. Usa la misma API REST; consulta cambios cada cinco segundos mientras la pestaña está visible y permite actualizar manualmente.
 - `Switchyard.Robot`: cliente de consola .NET que realiza un alta por HTTP y termina.
 - `Switchyard.Contracts`: tipos de los mensajes JSON; no contiene lógica de movimiento ni acceso a datos.
 - `Switchyard.Tests`: pruebas xUnit del contrato, el cliente y la persistencia en SQLite real.
@@ -15,7 +16,7 @@ El servidor mantiene una tabla `robots` con el identificador y la fecha de alta 
 
 Los requisitos de la asignatura son una aplicación distribuida con comunicación cliente-servidor mediante REST o SOAP, conservación del estado y un cliente .NET. La tecnología del frontend es libre.
 
-Usamos REST con JSON. Cada robot es un ejecutable .NET lanzado como un proceso independiente. Ya existe un servidor central para registrar robots; más adelante coordinará sus tareas. SQLite conserva las altas. El panel mostrará el almacén y permitirá introducir eventos de prueba cuando se implemente.
+Usamos REST con JSON. Cada robot es un ejecutable .NET lanzado como un proceso independiente. Ya existe un servidor central para registrar robots; más adelante coordinará sus tareas. SQLite conserva las altas. El panel actual permite registrarlas y consultarlas. La visualización del almacén y los eventos de simulación siguen pendientes.
 
 Se podrá demostrar la comunicación entre procesos en un mismo ordenador. La API deberá poder configurarse por dirección para que también sea posible separar clientes y servidor en distintas máquinas.
 
@@ -67,10 +68,25 @@ También habrá que definir identificadores de operación y reglas de idempotenc
 | Decisión | Qué tendremos en cuenta |
 | :--- | :--- |
 | Evolución de la persistencia | Empezamos con SQLite. Revisaremos migraciones y límites de concurrencia cuando incorporemos tareas y movimientos. |
-| Frontend y actualización del panel | Claridad visual y coste de implementación; empezar con la opción más sencilla que cumpla. |
+| Evolución del panel | Partimos de HTML, CSS y JavaScript sin framework, con consultas periódicas. Revisaremos esa elección cuando la simulación necesite más estado visual o menor latencia. |
 | Protocolo de turnos y reservas | Confirmaciones, tiempos de espera, prevención de conflictos y recuperación. |
 | Política de prioridades | Evitar que un robot quede esperando indefinidamente. |
 | Despliegue y arranque | Una ejecución local reproducible y configuración de la dirección del servidor. |
+
+## Ampliación opcional: acceso desde el móvil
+
+Esta propuesta se abordará **después de la demo principal**, si queda tiempo. No sustituye ninguno de los requisitos de sistemas distribuidos o programación en paralelo.
+
+| Uso propuesto | Qué haría falta |
+| :--- | :--- |
+| Un empleado consulta robots, tareas y rutas desde el almacén. | Implementar primero esos datos y su visualización; adaptar el mapa al gesto táctil y mostrar cuándo se recibió la información. |
+| Un revisor registra una incidencia o modifica un elemento permitido. | Definir acciones concretas, cuentas, permisos comprobados por la API y trazabilidad. Resolver también ediciones simultáneas y datos desactualizados. |
+
+Abrir una web adaptable en un teléfono de la misma red es la parte sencilla. Un acceso remoto seguro y los permisos añaden trabajo de servidor: autenticación, autorización, HTTPS y gestión de conflictos. No bastaría con ocultar un botón al empleado ni con elegir un rol en la pantalla.
+
+El frontend actual ayuda a conservar esa opción: utiliza rutas relativas a la API, botones aptos para tocar y un diseño que se reorganiza en pantallas estrechas. No requiere una app nativa, PWA ni un framework concreto. Hoy no hay cuentas ni distinción entre empleados y revisores: cualquiera que alcance la API puede registrar robots. El acceso público no forma parte de esta entrega.
+
+El diseño estrecho se comprueba en navegador; una prueba con teléfono físico y dos dispositivos de la misma red sigue siendo necesaria antes de dar por validado ese escenario. El [documento del panel](funcionalidades/02-panel-web.md) explica la implementación y la guía de ejecución indica cómo preparar esa comprobación.
 
 ## Comprobaciones previstas
 

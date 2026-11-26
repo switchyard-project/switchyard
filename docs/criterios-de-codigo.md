@@ -10,11 +10,13 @@ Antes de programar, definimos en la issue qué podrá hacer el usuario al termin
 
 - Código y nombres de proyectos, clases y métodos en inglés. Documentación y mensajes de consola en español.
 - Clases y métodos en `PascalCase`, variables y parámetros en `camelCase`; campos privados con `_camelCase`.
-- Métodos asíncronos terminados en `Async`. Devuelven `Task` o `Task<T>`; `async void` se reserva para manejadores de eventos que lo exijan.
+- En C#, métodos asíncronos terminados en `Async`. Devuelven `Task` o `Task<T>`; `async void` se reserva para manejadores de eventos que lo exijan.
 - Cada método hace una operación reconocible. Preferimos condiciones de salida claras y poca anidación.
 - Los comentarios explican motivos o límites que el código no revela; no narran cada instrucción.
 
 El controlador traduce peticiones y respuestas HTTP, el repositorio concentra SQL y el cliente HTTP concentra la comunicación. Cuando exista lógica de coordinación suficiente, se extraerá a sus propias clases. En el registro actual no añadimos una capa de servicios que solo reenviaría llamadas.
+
+En el panel web usamos funciones y variables en `camelCase`, módulos JavaScript y textos de interfaz en español. Separamos comunicación HTTP y manipulación de la página. La validación del formulario mejora la experiencia; la API conserva la validación definitiva.
 
 ## Reutilizar con criterio
 

@@ -16,7 +16,7 @@
   <a href="docs/README.md">Documentación técnica</a>
 </p>
 
-> **Primera funcionalidad disponible:** un cliente .NET registra su identificador en la API y el servidor lo guarda en SQLite. Ya podemos consultar los registros y conservarlos tras reiniciar. La simulación, el movimiento y la coordinación de rutas siguen pendientes. Las imágenes muestran el concepto, no capturas de la aplicación.
+> **Ya puedes probarlo:** registra robots desde el panel web o desde el cliente .NET y consulta sus altas, guardadas en SQLite. El panel se adapta a pantallas pequeñas y consulta los cambios cada cinco segundos. La simulación, el movimiento y las rutas siguen pendientes.
 
 ## La idea
 
@@ -43,6 +43,12 @@ El nombre viene de los patios ferroviarios donde se organizan trenes y desvíos.
 Nace como un proyecto de **Sistemas Distribuidos y Programación en Paralelo**, desarrollado en pareja. Queremos que también tenga sitio en un portfolio: un problema reconocible, decisiones que podamos explicar y una demostración reproducible.
 
 El caso de uso se inspira en la logística real. El resultado será un prototipo educativo; operar maquinaria física exigiría otras garantías y validaciones.
+
+## El panel que ya funciona
+
+![Panel de Switchyard con formulario de alta y registros consultados al servidor.](docs/assets/dashboard-desktop.png)
+
+*Captura de la aplicación con datos de demostración. Puedes dar de alta robots, ver los creados desde la consola y comprobar que siguen guardados al reiniciar. Un registro no indica que el robot esté conectado.*
 
 ## Un vistazo al almacén
 
@@ -79,9 +85,9 @@ flowchart LR
 - **Los robots** pedirán trabajo, comunicarán su posición y solicitarán permiso para avanzar. Cada uno tendrá su propio proceso y podrá desconectarse de forma independiente.
 - **El servidor** mantendrá una visión común del almacén: tareas, rutas y reservas de espacio. Tener una ruta calculada no significará tener permiso para recorrerla sin más.
 - **La base de datos** conservará el mapa, las tareas, el último estado conocido de los robots y los eventos necesarios para seguir la actividad. Al reiniciar, habrá que comprobar ese estado antes de reanudar movimientos.
-- **El panel** permitirá ver la simulación y preparar escenarios. El cliente .NET exigido por la asignatura será cada robot; el panel será una interfaz adicional cuya tecnología está por decidir.
+- **El panel** permitirá ver la simulación y preparar escenarios. El cliente .NET exigido por la asignatura será cada robot; el panel web es una interfaz adicional, construida con HTML, CSS y JavaScript.
 
-La primera entrega usa **REST con mensajes JSON**, un servidor **ASP.NET Core sobre .NET 10** y **SQLite**. El frontend sigue pendiente. Las decisiones y sus motivos están en la [documentación técnica](docs/README.md).
+La primera entrega usa **REST con mensajes JSON**, un servidor **ASP.NET Core sobre .NET 10** y **SQLite**. El panel inicial se sirve desde la misma API, sin instalar otro servidor. Las decisiones y sus motivos están en la [documentación técnica](docs/README.md).
 
 ### Dónde entra el trabajo en paralelo
 
@@ -109,13 +115,20 @@ El mayor riesgo del proyecto es intentar resolver toda la robótica de un almac�
 | Etapa | Qué queremos ver funcionando |
 | :--- | :--- |
 | **0 · Presentarnos al servidor — disponible** | Un cliente .NET registra un robot; la API permite consultarlo y conserva el alta en SQLite. |
+| **0.1 · Un panel para empezar — disponible** | Alta y listado desde el navegador, consultas periódicas y diseño adaptable. |
 | **1 · Una entrega completa** | Un cliente .NET se conecta a la API, recibe una tarea y guarda su progreso en la base de datos. |
 | **2 · Un almacén compartido** | Varios robots se desplazan con reservas de espacio y esperas visibles. |
 | **3 · Rutas en paralelo** | El servidor calcula varias rutas a la vez; medimos el resultado frente al cálculo secuencial. |
 | **4 · Cuando algo falla** | Introducimos obstáculos y desconexiones, detectamos bloqueos y probamos una recuperación acotada. |
 | **5 · Una demo reproducible** | Arrancamos diez procesos, mostramos el panel y documentamos cómo repetir el escenario. |
 
-El registro de robots está implementado; las etapas 1 a 5 siguen previstas. Para la primera versión quedan fuera los robots físicos, los mapas 3D, el aprendizaje automático y la alta disponibilidad del servidor. Preferimos una simulación pequeña que podamos entender, medir y defender bien.
+El registro y su panel web están implementados; las etapas 1 a 5 siguen previstas. Para la primera versión quedan fuera los robots físicos, los mapas 3D, el aprendizaje automático y la alta disponibilidad del servidor. Preferimos una simulación pequeña que podamos entender, medir y defender bien.
+
+### Una idea para más adelante: el almacén en el bolsillo
+
+Como ampliación **opcional**, un empleado podría consultar desde el móvil los robots y sus rutas, y un revisor autorizado podría realizar cambios acotados, como señalar una incidencia. Primero terminaremos la simulación y la demo principal.
+
+El panel ya se diseña para pantallas pequeñas, así que este objetivo no nos obliga a crear una app móvil. Las vistas de actividad, las cuentas y los permisos todavía no existen; permitir editar requerirá comprobar la autorización en el servidor. Los detalles y límites están en la [arquitectura](docs/arquitectura.md#ampliación-opcional-acceso-desde-el-móvil).
 
 ## Estado del repositorio y puesta en marcha
 
@@ -126,17 +139,19 @@ dotnet build Switchyard.sln --configuration Release
 dotnet run --project src/Switchyard.Api --configuration Release --no-build -- --urls http://localhost:5080
 ```
 
-En otra terminal, también desde la raíz, registra un robot:
+Abre [el panel de Switchyard](http://localhost:5080) para registrar robots y ver la lista. No necesitas Node ni instalar un frontend aparte.
+
+También puedes registrar un robot desde el cliente .NET. En otra terminal, desde la raíz:
 
 ```bash
 dotnet run --project src/Switchyard.Robot --configuration Release --no-build -- R01 http://localhost:5080
 ```
 
-El cliente muestra la confirmación y termina. Abre [la lista de robots](http://localhost:5080/api/robots) en el navegador para ver el registro. Si repites el alta de `R01`, la API indica que ya existe; puedes probar con `R02`.
+El cliente muestra la confirmación y termina. Con el panel visible, el registro aparecerá en una próxima consulta automática; también puedes pulsar **Actualizar**. La [lista en JSON](http://localhost:5080/api/robots) sigue disponible. Si repites el alta de `R01`, la API indica que ya existe; puedes probar con `R02`.
 
 Puedes detener la API con `Ctrl+C`, volver a arrancarla con el mismo comando y consultar de nuevo la lista: el alta seguirá guardada. Todavía no hay robots moviéndose ni detección de desconexiones.
 
-La [guía de ejecución](docs/ejecucion.md) explica las pruebas, la configuración y la demo paso a paso. Para entender el código y preparar la exposición, empieza por [la primera funcionalidad](docs/funcionalidades/01-registro-de-robots.md).
+La [guía de ejecución](docs/ejecucion.md) explica las pruebas, la configuración y la demo paso a paso. Para entender el código y preparar la exposición, empieza por [el registro](docs/funcionalidades/01-registro-de-robots.md) y [el panel web](docs/funcionalidades/02-panel-web.md).
 
 Por ahora puedes explorar:
 
