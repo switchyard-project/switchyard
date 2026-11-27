@@ -4,7 +4,7 @@
 
 ## Issue relacionada
 
-<!-- Sustituye por Closes #NUMERO si completa la issue, o Refs: #NUMERO si es parcial. Usa una issue real. -->
+<!-- PR de tarea hacia develop: Refs: #NUMERO. Si depende de otro PR, enlázalo y explica la base temporal. En una promoción hacia main, enumera las issues incluidas; Closes solo para issues abiertas que se completen con ella. -->
 
 ## Cómo se ha comprobado
 
@@ -16,6 +16,7 @@
 
 ## Antes de solicitar revisión
 
+- [ ] La base es develop, o se explica la dependencia temporal o promoción a main.
 - [ ] Cumple el alcance acordado y los criterios que declara resolver.
 - [ ] Los títulos de los commits y del PR incluyen la issue con el sufijo [refs #NUMERO], sustituido por su número real.
 - [ ] He revisado el diff y no contiene secretos, archivos innecesarios ni cambios ajenos.

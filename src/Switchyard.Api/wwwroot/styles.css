@@ -121,6 +121,102 @@ button, a, input {
     padding: 52px 24px 32px;
 }
 
+.section-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-nav a {
+    padding: 12px 20px;
+    min-height: 48px;
+    color: var(--muted);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+}
+
+.section-nav a[aria-current="page"] {
+    color: var(--night);
+    border-bottom-color: #21755b;
+}
+
+.section-nav a:hover {
+    background: #e6edf1;
+}
+
+.form-field {
+    margin-bottom: 20px;
+}
+
+.task-row {
+    padding: 22px 26px;
+    border-bottom: 1px solid var(--border);
+}
+
+.task-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.task-title h3 {
+    font: 650 1rem ui-monospace, monospace;
+}
+
+.task-status {
+    padding: 4px 10px;
+    border-radius: 5px;
+    font-size: .875rem;
+    font-weight: 600;
+}
+
+.task-status[data-state="pending"] {
+    background: #fff0d8;
+    color: #764708;
+}
+
+.task-status[data-state="assigned"] {
+    background: #e5f0ff;
+    color: #25558a;
+}
+
+.task-status[data-state="completed"] {
+    background: #dff8ec;
+    color: #1d6248;
+}
+
+.task-route {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 20px;
+    margin: 16px 0 12px;
+}
+
+.task-route dt {
+    color: var(--muted);
+    font-size: .875rem;
+    margin-bottom: 4px;
+}
+
+.task-route dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.task-assignment {
+    color: var(--muted);
+    font-size: .875rem;
+}
+
+.task-robot {
+    font-family: ui-monospace, monospace;
+    overflow-wrap: anywhere;
+}
+
 .page-heading {
     display: flex;
     justify-content: space-between;
@@ -485,6 +581,14 @@ input::placeholder {
 }
 
 @media (max-width: 700px) {
+    .task-row {
+        padding: 22px;
+    }
+
+    .task-route {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
     .topbar {
         padding: 18px 20px;
     }

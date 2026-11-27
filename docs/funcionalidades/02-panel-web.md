@@ -4,6 +4,8 @@
 
 El panel muestra datos reales de la API. No simula posiciones, actividad ni rutas; «registrado» significa que existe un alta guardada. El cliente de consola .NET sigue siendo un proceso independiente y conserva su función en el proyecto.
 
+Con el [panel de tareas](04-panel-de-tareas.md), la comunicación HTTP y el ciclo de consultas se han extraído a dos módulos compartidos. El comportamiento del registro se conserva; el mapa de funciones de este documento refleja esa organización actual.
+
 ## Qué puede hacer una persona
 
 1. Abrir la dirección del servidor en su navegador.
@@ -55,8 +57,10 @@ La interfaz utiliza `/api/robots`, una ruta relativa al origen que la sirve. Si 
 | [Program.cs](../../src/Switchyard.Api/Program.cs) | Añade `UseDefaultFiles` y `UseStaticFiles` antes de los controladores. La raíz sirve `index.html`; `/api/robots` conserva su comportamiento. |
 | [index.html](../../src/Switchyard.Api/wwwroot/index.html) | Define la estructura, el formulario, las etiquetas, los estados y una plantilla para cada registro. |
 | [styles.css](../../src/Switchyard.Api/wwwroot/styles.css) | Aplica la identidad visual, el foco visible y la distribución adaptable. |
-| [robot-api.js](../../src/Switchyard.Api/wwwroot/robot-api.js) | Envía HTTP, interpreta errores y comprueba la forma de las respuestas. No modifica elementos de la página. |
-| [dashboard.js](../../src/Switchyard.Api/wwwroot/dashboard.js) | Coordina acciones de la persona, consultas periódicas y cambios visibles. |
+| [robot-api.js](../../src/Switchyard.Api/wwwroot/robot-api.js) | Define operaciones de robots, sus mensajes de error y la validación de las respuestas. Delega el transporte en `http-client.js`. No modifica elementos de la página. |
+| [dashboard.js](../../src/Switchyard.Api/wwwroot/dashboard.js) | Dibuja los robots y configura el panel compartido con las operaciones de registro y consulta. |
+| [http-client.js](../../src/Switchyard.Api/wwwroot/http-client.js) | Comparte fetch, tiempo de espera y tratamiento de errores de transporte. |
+| [collection-panel.js](../../src/Switchyard.Api/wwwroot/collection-panel.js) | Comparte el ciclo de consulta y envío entre robots y tareas; conserva la última lista ante errores. |
 | [WebDashboardTests.cs](../../tests/Switchyard.Tests/WebDashboardTests.cs) | Comprueba recursos públicos, tipos de contenido y rutas que deben seguir devolviendo `404`. |
 
 El isotipo de `wwwroot/assets` es una copia del original de [identidad visual](../identidad-visual.md), incluida para servirlo sin exponer la carpeta de documentación. Si cambia el original, hay que actualizar esa copia.
@@ -70,10 +74,12 @@ El isotipo de `wwwroot/assets` es una copia del original de [identidad visual](.
 | `getRobots` | Consulta el listado y rechaza respuestas que no sean un array de registros válidos. |
 | `registerRobot` | Envía el identificador como JSON y comprueba que la respuesta corresponde a ese robot. |
 | `updateControls` | Impide repetir el envío mientras está pendiente y cambia el texto de los botones durante las operaciones. |
-| `renderRobots` | Clona la plantilla de cada fila, rellena texto y fecha y actualiza el total y el estado vacío. |
-| `refreshRobots` | Coordina las lecturas: si ya hay una, devuelve su misma promesa; si se está enviando un alta, no inicia otra lectura. |
-| `loadRobots` | Obtiene la lista, actualiza la hora de la consulta correcta o muestra el error conservando los últimos datos. |
-| `submitRegistration` | Envía el alta, muestra el resultado y devuelve el foco al campo. Si se creó, espera una lectura anterior pendiente y solicita otra para ver el alta reciente. |
+| `renderRobots` | Clona la plantilla de cada fila, rellena texto y fecha y actualiza el total. El módulo compartido gestiona el estado vacío. |
+| `refresh` | Coordina las lecturas: si ya hay una, devuelve su misma promesa; si se está enviando un alta, no inicia otra lectura. |
+| `loadRecords` | Obtiene la lista, actualiza la hora de la consulta correcta o muestra el error conservando los últimos datos. |
+| `submit` | Envía el alta, muestra el resultado y devuelve el foco al campo. Si se creó, espera una lectura anterior pendiente y solicita otra para ver el alta reciente. |
+
+Las funciones `updateControls`, `refresh`, `loadRecords` y `submit` viven ahora dentro de `mountCollectionPanel`. Este recibe el formulario y funciones concretas de consulta, representación y creación. No sabe qué campos tiene un robot.
 
 `currentRefresh` guarda una promesa mientras hay una consulta en curso y vuelve a `null` al terminar. Esto evita solapar lecturas y permite que el alta espere una consulta iniciada antes de la inserción. El temporizador y el botón utilizan la misma función.
 

@@ -1,6 +1,6 @@
 # Ejecutar Switchyard
 
-Puedes dar de alta robots y consultar sus registros desde el panel web o el cliente de consola .NET. El cliente también puede pedir y confirmar una entrega simulada. Los movimientos y las señales periódicas de actividad siguen pendientes.
+Puedes dar de alta robots desde el panel web o el cliente .NET. El panel también permite crear tareas de transporte y consultar sus estados. El cliente también puede pedir y confirmar una entrega simulada. Los movimientos y las señales periódicas de actividad siguen pendientes.
 
 ## Requisitos
 
@@ -76,6 +76,28 @@ Si publicas la API o la ejecutas desde otro directorio, configura una ruta absol
 
 Para comprobar también la persistencia de una asignación y su confirmación, sigue la [demostración de una tarea de transporte](funcionalidades/03-tareas-de-transporte.md#demostración-en-powershell).
 
+## Demo completa: del panel a la consola
+
+Usa un archivo nuevo, como `--Database:Path data/demo-panel-tareas.db`, si quieres que no haya tareas de demostraciones anteriores. Arranca la API como en el paso 2 y abre <http://localhost:5080>.
+
+1. En **Robots**, registra `R01`. Si ya existe en esa base, puedes utilizarlo.
+2. En **Tareas**, crea una tarea con recogida `Estante A` y destino `Muelle 1`. Aparecerá como **Pendiente**.
+3. En otra terminal, ejecuta este comando (igual en macOS, Linux y PowerShell):
+
+```bash
+dotnet run --project src/Switchyard.Robot --configuration Release --no-build -- --work R01 http://localhost:5080
+```
+
+4. Deja la consola esperando Intro. En el panel, la tarea aparecerá **Asignada** a `R01` en la próxima consulta; también puedes pulsar **Actualizar**.
+5. Pulsa Intro en la consola para confirmar la entrega simulada. El panel mostrará **Completada**, conservando el robot que la realizó.
+6. Reinicia la API con el mismo archivo y actualiza el panel: los estados siguen guardados.
+
+El robot retoma primero su tarea activa; si no tiene una, recibe la pendiente con menor identificador. Si hay tareas anteriores, no tiene por qué recibir la que acabas de crear. El panel no ofrece botones para asignar o completar: esas acciones se demuestran desde el proceso .NET.
+
+También puedes consultar <http://localhost:5080/api/tasks> para ver el listado en JSON. Se incluyen pendientes, asignadas y completadas, ordenadas por identificador. El formulario admite entre 1 y 60 caracteres por campo, con contenido distinto de espacios; el servidor elimina los espacios de los extremos.
+
+Si una creación no recibe respuesta, actualiza y comprueba la lista antes de repetirla: el servidor podría haberla guardado. Dos tareas con los mismos lugares son válidas; no existe todavía una clave de operación que evite duplicarlas tras un reintento. No se reintenta el POST automáticamente.
+
 ## 5. Mostrar los errores previstos
 
 | Acción | Resultado |
@@ -116,11 +138,11 @@ dotnet test Switchyard.sln --configuration Release --no-build
 dotnet format Switchyard.sln --verify-no-changes --no-restore
 ```
 
-Ejecuta primero la compilación si todavía no la has hecho o si has cambiado código. Las pruebas crean archivos SQLite temporales propios, no necesitan una API arrancada y no utilizan la base de la demo. El workflow [`.github/workflows/dotnet.yml`](../.github/workflows/dotnet.yml) ejecuta restauración, compilación, pruebas y revisión de formato en Linux y Windows para los PR hacia `main` y los cambios integrados en esa rama. Su resultado debe consultarse en cada PR; tener el workflow no configura por sí solo un check obligatorio.
+Ejecuta primero la compilación si todavía no la has hecho o si has cambiado código. Las pruebas crean archivos SQLite temporales propios, no necesitan una API arrancada y no utilizan la base de la demo. El workflow [`.github/workflows/dotnet.yml`](../.github/workflows/dotnet.yml) ejecuta restauración, compilación, pruebas y revisión de formato en Linux y Windows para todos los PR y los cambios integrados en `develop` o `main`. Su resultado debe consultarse en cada PR; tener el workflow no configura por sí solo un check obligatorio.
 
 ## Comprobar la interfaz
 
-La [segunda funcionalidad](funcionalidades/02-panel-web.md) detalla los escenarios de navegador: teclado, alta desde consola, duplicados, fallo de red y recuperación. Las pruebas .NET comprueban que se sirven los recursos del panel; no ejecutan su JavaScript. La CI actual cubre esas pruebas .NET. La comprobación visual y de interacción se realiza además en navegador y se documenta en el PR.
+Los documentos del [panel de robots](funcionalidades/02-panel-web.md) y del [panel de tareas](funcionalidades/04-panel-de-tareas.md) detallan los escenarios de navegador: teclado, alta desde consola, duplicados, fallo de red y recuperación. Las pruebas .NET comprueban que se sirven los recursos del panel; no ejecutan su JavaScript. La CI actual cubre esas pruebas .NET. La comprobación visual y de interacción se realiza además en navegador y se documenta en el PR.
 
 El frontend no necesita una compilación propia ni dependencias de Node para ejecutarse. `dotnet publish src/Switchyard.Api --configuration Release` incluye `wwwroot` en la publicación; los datos permanecen fuera de esa carpeta pública.
 

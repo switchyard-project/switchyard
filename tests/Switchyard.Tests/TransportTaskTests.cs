@@ -20,6 +20,39 @@ public sealed class TransportTaskTests : IDisposable
     }
 
     [Fact]
+    public async Task GetAll_WhenEmpty_ReturnsAnEmptyJsonList()
+    {
+        using var response = await _client.GetAsync("/api/tasks");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("application/json", response.Content.Headers.ContentType?.MediaType);
+        var tasks = await response.Content.ReadFromJsonAsync<TransportTaskResponse[]>();
+        Assert.NotNull(tasks);
+        Assert.Empty(tasks);
+    }
+
+    [Fact]
+    public async Task GetAll_WithEveryStatus_ReturnsOrderedTasksWithoutChangingThem()
+    {
+        await _robot.RegisterAsync("R01");
+        var first = await CreateTaskAsync();
+        await _robot.ClaimTaskAsync("R01");
+        var completed = await _robot.CompleteTaskAsync("R01", first.Id);
+        await CreateTaskAsync();
+        var assigned = await _robot.ClaimTaskAsync("R01");
+        Assert.NotNull(assigned);
+        var pending = await CreateTaskAsync();
+
+        var tasks = await _client.GetFromJsonAsync<TransportTaskResponse[]>("/api/tasks");
+
+        Assert.Equal(new[] { completed, assigned, pending }, tasks);
+        foreach (var expected in new[] { completed, assigned, pending })
+        {
+            Assert.Equal(expected, await _client.GetFromJsonAsync<TransportTaskResponse>($"/api/tasks/{expected.Id}"));
+        }
+    }
+
+    [Fact]
     public async Task Create_ReturnsPendingTaskAndItsLocation()
     {
         using var response = await _client.PostAsJsonAsync("/api/tasks", new
@@ -145,6 +178,8 @@ public sealed class TransportTaskTests : IDisposable
         using var restartedClient = restarted.CreateClient();
         Assert.Equal(completed, await restartedClient.GetFromJsonAsync<TransportTaskResponse>($"/api/tasks/{first.Id}"));
         Assert.Equal(assigned, await new RobotApiClient(restartedClient).ClaimTaskAsync("R02"));
+        Assert.Equal(new[] { completed, assigned },
+            await restartedClient.GetFromJsonAsync<TransportTaskResponse[]>("/api/tasks"));
     }
 
     private async Task<TransportTaskResponse> CreateTaskAsync()

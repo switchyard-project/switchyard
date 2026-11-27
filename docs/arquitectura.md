@@ -5,7 +5,7 @@
 ## Lo que existe hoy
 
 - `Switchyard.Api` usa ASP.NET Core sobre .NET 10 y expone el registro y la gestión de tareas.
-- `Switchyard.Api/wwwroot`: panel de registro en HTML, CSS y módulos JavaScript. Usa la misma API REST; consulta cambios cada cinco segundos mientras la pestaña está visible y permite actualizar manualmente.
+- `Switchyard.Api/wwwroot`: paneles de robots y tareas en HTML, CSS y módulos JavaScript. Usan la misma API REST; la página visible consulta su lista cada cinco segundos y permite actualizar manualmente. Comparten transporte HTTP y gestión de carga, errores y envíos.
 - `Switchyard.Robot` es el cliente de consola .NET. Registra un robot o, con `--work`, pide y completa una tarea por HTTP.
 - `Switchyard.Contracts`: tipos de los mensajes JSON; no contiene lógica de movimiento ni acceso a datos.
 - `Switchyard.Tests`: pruebas xUnit del contrato, el cliente y la persistencia en SQLite real.
@@ -18,7 +18,7 @@ La tabla `transport_tasks` guarda la recogida, el destino, el identificador asig
 
 Los requisitos de la asignatura son una aplicación distribuida con comunicación cliente-servidor mediante REST o SOAP, conservación del estado y un cliente .NET. La tecnología del frontend es libre.
 
-Usamos REST con JSON. Cada robot es un ejecutable .NET lanzado como un proceso independiente. El servidor central registra robots y les asigna trabajo. SQLite conserva las altas y el estado de las tareas. El panel actual permite registrar y consultar robots. La visualización del almacén y los eventos de simulación siguen pendientes.
+Usamos REST con JSON. Cada robot es un ejecutable .NET lanzado como un proceso independiente. El servidor central registra robots y les asigna trabajo. SQLite conserva las altas y el estado de las tareas. El panel actual permite registrar robots, crear tareas y consultar sus estados. El robot sigue solicitando y confirmando trabajo desde su proceso .NET. La visualización del almacén y los eventos de simulación siguen pendientes.
 
 Se podrá demostrar la comunicación entre procesos en un mismo ordenador. La API deberá poder configurarse por dirección para que también sea posible separar clientes y servidor en distintas máquinas.
 
@@ -100,4 +100,4 @@ El diseño estrecho se comprueba en navegador; una prueba con teléfono físico 
 6. Un escenario de bloqueo que active la política de recuperación o muestre que no hay una salida segura.
 7. Comparación reproducible del cálculo secuencial y paralelo.
 
-Estas comprobaciones de coordinación son objetivos de desarrollo. Ya se han probado el registro y la consulta por HTTP, el rechazo de duplicados simultáneos y la conservación de las altas tras reiniciar. Todavía no hay tareas, movimientos ni reservas que reanudar.
+Estas comprobaciones de coordinación son objetivos de desarrollo. Ya se han probado el registro y la consulta por HTTP, el rechazo de duplicados simultáneos y la conservación de las altas tras reiniciar. También se han probado la asignación y la finalización de tareas, conservadas tras reiniciar. Todavía no hay movimientos ni reservas que reanudar.

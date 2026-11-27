@@ -77,6 +77,28 @@ public sealed class TransportTaskRepository
         return reader.Read() ? ReadTask(reader) : null;
     }
 
+    public IReadOnlyList<TransportTaskResponse> GetAll()
+    {
+        using var connection = new SqliteConnection(_connectionString);
+        connection.Open();
+
+        using var command = connection.CreateCommand();
+        command.CommandText = """
+            SELECT id, pickup, destination, robot_id, completed
+            FROM transport_tasks
+            ORDER BY id;
+            """;
+
+        using var reader = command.ExecuteReader();
+        var tasks = new List<TransportTaskResponse>();
+        while (reader.Read())
+        {
+            tasks.Add(ReadTask(reader));
+        }
+
+        return tasks;
+    }
+
     public TransportTaskResponse? Claim(string robotId)
     {
         using var connection = new SqliteConnection(_connectionString);

@@ -2,7 +2,7 @@
 
 Queremos que cualquiera pueda abrir el repositorio y entender qué estamos haciendo, quién se encarga y por qué se tomó cada decisión. Esta guía es el acuerdo de trabajo del equipo y el punto de partida para nuevos colaboradores y asistentes de IA.
 
-El recorrido habitual será **issue → rama → commits → pull request → revisión → integración en `main`**. También se aplica a documentación, correcciones y configuración del repositorio.
+El recorrido habitual será **issue → rama de tarea → PR → revisión → `develop` → PR de promoción → `main`**. También se aplica a documentación, correcciones y configuración del repositorio.
 
 ## Un equipo de dos
 
@@ -31,13 +31,14 @@ Para seguir el progreso usamos estas situaciones:
 | En curso | Responsable asignado y rama enlazada en la descripción de la issue o mediante un PR en borrador. |
 | En revisión | PR listo para revisar y revisión solicitada al compañero. |
 | Bloqueada | La descripción de la issue explica el impedimento y qué hace falta para continuar. |
-| Terminada | Cambio integrado en `main`, criterios cumplidos e issue cerrada. |
+| Integrada | Cambio revisado en `develop`, criterios cumplidos e issue cerrada con enlace al PR. Puede no estar todavía en `main`. |
+| Publicada en `main` | Una promoción revisada incorpora el cambio a la versión estable. |
 
 No hace falta un tablero para empezar. Si más adelante usamos GitHub Projects o etiquetas, deberán reflejar estas mismas situaciones.
 
 ## 2. Trabajar en una rama por tarea
 
-`main` es la versión compartida y debe conservarse en un estado coherente. El trabajo nuevo sale de una copia actualizada de `main` y vuelve mediante un pull request. No necesitamos una rama `develop` ni ramas permanentes por persona.
+`develop` reúne las entregas revisadas que estamos preparando. `main` conserva la versión estable de la demo. El trabajo nuevo sale de `develop` actualizado, en una rama por tarea, y vuelve mediante PR. No desarrollamos directamente sobre ninguna de las dos ramas compartidas. Este acuerdo sustituye, desde el 27 de noviembre de 2026, al flujo inicial que trabajaba únicamente con `main`.
 
 Nombramos las ramas así:
 
@@ -56,12 +57,12 @@ docs/23-document-demo-setup
 Con el árbol de trabajo limpio y la issue ya creada, el inicio sería:
 
 ```bash
-git switch main
-git pull --ff-only origin main
+git switch develop
+git pull --ff-only origin develop
 git switch -c feat/12-register-robots
 ```
 
-Antes de cambiar de rama, revisamos `git status`. Si hay trabajo pendiente, lo conservamos y aclaramos a qué tarea pertenece; no lo borramos ni lo mezclamos con otra entrega. En una rama compartida, incorporamos los cambios de `origin/main` mediante merge para evitar reescribir los commits del compañero. No hacemos force push sobre `main` ni sobre ramas compartidas.
+Antes de cambiar de rama, revisamos `git status`. Si hay trabajo pendiente, lo conservamos y aclaramos a qué tarea pertenece; no lo borramos ni lo mezclamos con otra entrega. En una rama compartida, incorporamos los cambios de `origin/develop` mediante merge para evitar reescribir los commits del compañero. No hacemos force push sobre `main` ni sobre ramas compartidas.
 
 ## 3. Escribir commits que cuenten el cambio
 
@@ -108,7 +109,7 @@ Las rutas y el número de estos ejemplos son orientativos. Seleccionamos los arc
 
 ## 4. Abrir un pull request por entrega
 
-Publicamos la rama y abrimos un PR hacia `main`. Si la implementación sigue en marcha, lo abrimos en borrador. Cada PR debe cubrir una tarea acotada; si una issue resulta demasiado grande, la dividimos en tareas menores enlazadas.
+Publicamos la rama y abrimos un PR hacia `develop`. Si la implementación sigue en marcha, lo abrimos en borrador. Cada PR debe cubrir una tarea acotada; si una issue resulta demasiado grande, la dividimos en tareas menores enlazadas.
 
 ```bash
 git push -u origin feat/12-register-robots
@@ -116,7 +117,15 @@ git push -u origin feat/12-register-robots
 
 El título sigue el formato de los commits, incluido el sufijo `[refs #numero]` con la issue de trabajo. El número de un PR no sustituye a la referencia a su issue. La descripción usa la plantilla del repositorio para explicar qué cambia, cómo se comprobó y qué limitaciones quedan. Los cambios visuales incluyen una captura o ilustración cuando ayude a revisarlos.
 
-Usamos `Closes #12` en la descripción cuando el PR completa la issue. GitHub la cerrará al integrar el PR en la rama predeterminada, que aquí es `main`. Si solo aporta una parte, usamos `Refs: #12` y mantenemos la issue abierta. Reservamos las palabras de cierre para el PR, en lugar de cerrar tareas desde commits intermedios. [Referencia de GitHub](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
+En los PR de tareas usamos `Refs: #12` con el número real. Al integrar en `develop`, comprobamos los criterios y cerramos la issue manualmente, enlazando el PR y aclarando que el cambio está en `develop`. No confiamos en `Closes` para ese cierre: GitHub vincula las palabras de cierre a la rama predeterminada, que en este repositorio sigue siendo `main`.
+
+El PR de promoción a `main` enumera las issues y entregas que publica. Puede usar `Closes #numero` para una issue aún abierta que se complete con esa promoción. No cerramos tareas por publicar una rama ni simulamos que integrar en `develop` equivale a publicar en `main`. [Referencia de GitHub](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue).
+
+### Cuando una entrega depende de otra
+
+Si el requisito está listo pero espera revisión, podemos crear la siguiente rama desde él y abrir el segundo PR hacia esa rama. Así se revisa solo su cambio adicional. Indicamos el PR del que depende en ambas descripciones. La CI comprueba todos los PR, también estos.
+
+No integramos el segundo PR en la rama del primero. Tras integrar el requisito en `develop`, incorporamos `origin/develop` a la rama dependiente mediante merge, cambiamos la base del segundo PR a `develop` y revisamos de nuevo diff y checks. Si la primera rama tiene un PR dependiente abierto, conservamos esa rama hasta cambiar la base. No hace falta reescribir commits publicados.
 
 No dejamos números de ejemplo ni apartados vacíos en un PR listo para revisar. Solicitamos la revisión del compañero y esperamos su aprobación antes de integrar. Una revisión automática o de IA puede ayudar, pero no sustituye esa revisión humana.
 
@@ -133,9 +142,13 @@ Para considerar una entrega terminada:
 - El compañero ha aprobado la versión vigente y se han resuelto sus observaciones.
 - Los controles automatizados exigidos pasan, cuando existan.
 
-Si se modifica el comportamiento después de una aprobación, se solicita una nueva revisión. La integración habitual será **Squash and merge**: un commit por PR en `main`. Antes de confirmar el squash, revisamos que su título conserve `[refs #numero]` con la issue de trabajo. Si se acuerda una integración mediante merge, su commit también debe incluir ese sufijo en el título.
+Si se modifica el comportamiento después de una aprobación, se solicita una nueva revisión. Para una rama de tarea independiente, la integración habitual en `develop` será **Squash and merge**: un commit por PR. Si otra rama depende de sus commits, preferimos un merge que conserve esos commits para facilitar la continuación. Antes de confirmar el squash, revisamos que su título conserve `[refs #numero]` con la issue de trabajo. Si se acuerda una integración mediante merge, su commit también debe incluir ese sufijo en el título.
 
-Después de integrar, comprobamos que la issue se haya cerrado si correspondía, eliminamos la rama remota terminada y actualizamos nuestra copia local de `main`. No cerramos una tarea únicamente porque se haya subido una rama.
+Después de integrar en `develop`, cerramos la issue con el estado y enlace correspondientes, actualizamos nuestra copia local y eliminamos la rama de tarea cuando no tenga PR dependientes. Conservamos `develop` y `main`.
+
+### Promocionar una versión estable
+
+Cuando el conjunto de entregas esté probado, abrimos un PR de `develop` a `main`, con las issues incluidas, los comandos de demo y los resultados reales. Requiere revisión humana y checks correctos sobre la versión que se va a integrar. Usamos un merge que conserve la historia compartida y añadimos las referencias de las issues al título. No promovemos automáticamente cada cambio ni borramos `develop` después de hacerlo.
 
 ## Validar sin inventar resultados
 
@@ -147,7 +160,7 @@ dotnet test Switchyard.sln --configuration Release --no-build
 dotnet format Switchyard.sln --verify-no-changes --no-restore
 ```
 
-El [workflow de .NET](../.github/workflows/dotnet.yml) repite compilación, pruebas y formato en Linux y Windows al abrir un PR hacia `main` y al actualizar esa rama. Revisamos sus resultados antes de integrar. Los cambios en API o persistencia necesitan comprobar la integración; los de coordinación, los conflictos entre clientes. La [guía de ejecución](ejecucion.md) permite repetir la demo con procesos independientes.
+El [workflow de .NET](../.github/workflows/dotnet.yml) repite compilación, pruebas y formato en Linux y Windows en todos los PR y al actualizar `develop` o `main`. Revisamos sus resultados antes de integrar. Los cambios en API o persistencia necesitan comprobar la integración; los de coordinación, los conflictos entre clientes. La [guía de ejecución](ejecucion.md) permite repetir la demo con procesos independientes.
 
 No escribimos «tests OK» si no se han ejecutado. Si algo no puede verificarse, indicamos qué falta y por qué. Las decisiones importantes de arquitectura se recogen en `docs/`, con su motivo y sus consecuencias, para que no dependan de recordar una conversación.
 
@@ -161,7 +174,7 @@ La persona responsable sigue siendo responsable del resultado. Antes de integrar
 
 El repositorio incluye esta guía, `AGENTS.md`, plantillas de issues y PR, y un workflow de compilación, pruebas y formato. **Estos archivos orientan y comprueban el trabajo; por sí solos no bloquean pushes ni obligan a revisar.**
 
-Queda pendiente verificar o configurar en GitHub la protección de `main`: PR obligatorio, al menos una aprobación del compañero, resolución de conversaciones y revisión renovada tras cambios. Los checks de Linux y Windows deben seleccionarse como obligatorios en esa configuración para impedir integrar con fallos. No damos por activada ninguna de estas protecciones solo por incluir el workflow. [Referencia sobre ramas protegidas](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches).
+Queda pendiente verificar o configurar en GitHub la protección de `develop` y `main`: PR obligatorio, al menos una aprobación del compañero, resolución de conversaciones y revisión renovada tras cambios. Los checks de Linux y Windows deben seleccionarse como obligatorios en esa configuración para impedir integrar con fallos. No damos por activada ninguna de estas protecciones solo por incluir el workflow. [Referencia sobre ramas protegidas](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches).
 
 ### Excepción de la entrega inicial
 

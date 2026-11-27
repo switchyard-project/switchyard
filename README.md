@@ -16,7 +16,7 @@
   <a href="docs/README.md">Documentación técnica</a>
 </p>
 
-> **Ya puedes probarlo:** registra robots desde el panel web o desde el cliente .NET. También puedes crear una tarea por la API y completar una entrega simulada desde la consola. SQLite conserva las altas y las tareas. El mapa, el movimiento y las rutas siguen pendientes.
+> **Ya puedes probarlo:** registra robots desde el panel web o desde el cliente .NET. Crea tareas desde el panel y sigue cómo el cliente .NET las recoge y confirma su entrega simulada. SQLite conserva las altas y las tareas. El mapa, el movimiento y las rutas siguen pendientes.
 
 ## La idea
 
@@ -46,9 +46,9 @@ El caso de uso se inspira en la logística real. El resultado será un prototipo
 
 ## El panel que ya funciona
 
-![Panel de Switchyard con formulario de alta y registros consultados al servidor.](docs/assets/dashboard-desktop.png)
+![Panel de tareas de Switchyard con una tarea completada, otra asignada y otra pendiente.](docs/assets/tasks-desktop.png)
 
-*Captura de la aplicación con datos de demostración. Puedes dar de alta robots, ver los creados desde la consola y comprobar que siguen guardados al reiniciar. Un registro no indica que el robot esté conectado.*
+*Captura real con datos de demostración. En **Robots** registras los clientes; en **Tareas** preparas recogidas y destinos y sigues sus estados. Los datos permanecen al reiniciar. Un registro o una asignación no prueban que el robot siga conectado.*
 
 ## Un vistazo al almacén
 
@@ -116,7 +116,7 @@ El mayor riesgo del proyecto es intentar resolver toda la robótica de un almac�
 | :--- | :--- |
 | **0 · Presentarnos al servidor — disponible** | Un cliente .NET registra un robot; la API permite consultarlo y conserva el alta en SQLite. |
 | **0.1 · Un panel para empezar — disponible** | Alta y listado desde el navegador, consultas periódicas y diseño adaptable. |
-| **1 · Una entrega completa — disponible** | Un cliente .NET pide una tarea y confirma la entrega simulada. La API guarda su estado en SQLite. |
+| **1 · Una entrega completa — disponible** | Creamos la tarea en el panel, un cliente .NET la solicita y confirma su entrega; el panel muestra los cambios guardados. |
 | **2 · Un almacén compartido** | Varios robots se desplazan con reservas de espacio y esperas visibles. |
 | **3 · Rutas en paralelo** | El servidor calcula varias rutas a la vez; medimos el resultado frente al cálculo secuencial. |
 | **4 · Cuando algo falla** | Introducimos obstáculos y desconexiones, detectamos bloqueos y probamos una recuperación acotada. |
@@ -139,7 +139,7 @@ dotnet build Switchyard.sln --configuration Release
 dotnet run --project src/Switchyard.Api --configuration Release --no-build -- --urls http://localhost:5080
 ```
 
-Abre [el panel de Switchyard](http://localhost:5080) para registrar robots y ver la lista. No necesitas Node ni instalar un frontend aparte.
+Abre [el panel de Switchyard](http://localhost:5080) para registrar robots. La sección **Tareas** permite crear recogidas y destinos y seguir su estado. No necesitas Node ni instalar un frontend aparte.
 
 También puedes registrar un robot desde el cliente .NET. En otra terminal, desde la raíz:
 
@@ -149,9 +149,9 @@ dotnet run --project src/Switchyard.Robot --configuration Release --no-build -- 
 
 El cliente muestra la confirmación y termina. Con el panel visible, el registro aparecerá en una próxima consulta automática; también puedes pulsar **Actualizar**. La [lista en JSON](http://localhost:5080/api/robots) sigue disponible. Si repites el alta de `R01`, la API indica que ya existe; puedes probar con `R02`.
 
-Puedes detener la API con `Ctrl+C`, volver a arrancarla con el mismo comando y consultar de nuevo la lista para comprobar que el alta sigue guardada. Para crear y completar una tarea desde consola, sigue la [demo de transporte](docs/funcionalidades/03-tareas-de-transporte.md#demostración-en-powershell).
+Puedes detener la API con `Ctrl+C`, volver a arrancarla con el mismo comando y consultar de nuevo la lista para comprobar que el alta sigue guardada. Para crear una tarea en el panel y completarla desde la consola, sigue la [demo paso a paso](docs/ejecucion.md#demo-completa-del-panel-a-la-consola).
 
-La [guía de ejecución](docs/ejecucion.md) explica las pruebas, la configuración y la demo paso a paso. Para entender el código y preparar la exposición, empieza por [el registro](docs/funcionalidades/01-registro-de-robots.md) y [el panel web](docs/funcionalidades/02-panel-web.md).
+La [guía de ejecución](docs/ejecucion.md) explica las pruebas, la configuración y la demo paso a paso. Para entender el código y preparar la exposición, empieza por [el registro](docs/funcionalidades/01-registro-de-robots.md), [el panel de robots](docs/funcionalidades/02-panel-web.md) y [el panel de tareas](docs/funcionalidades/04-panel-de-tareas.md).
 
 Por ahora puedes explorar:
 
@@ -176,7 +176,7 @@ switchyard/
 
 ## Cómo trabajamos
 
-Cada tarea tendrá una issue con responsable, una rama propia y commits que permitan seguir su historia. Los cambios llegarán a `main` mediante un pull request revisado por el compañero. Así podremos saber qué se hizo, por qué y cómo se comprobó.
+Cada tarea tendrá una issue con responsable, una rama propia y commits que permitan seguir su historia. Las ramas de tarea salen de `develop` y vuelven mediante un pull request revisado por el compañero. Cuando el conjunto esté validado, otro PR promociona `develop` a `main`, nuestra versión estable. Así podremos saber qué se hizo, por qué y cómo se comprobó.
 
 La [guía de trabajo](docs/flujo-de-trabajo.md) explica el proceso con ejemplos y recoge la excepción de esta primera entrega de documentación. Incluimos plantillas para facilitar las tareas y revisiones, y un [AGENTS.md](AGENTS.md) para que los asistentes de IA compartan el mismo contexto.
 

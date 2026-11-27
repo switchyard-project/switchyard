@@ -11,16 +11,17 @@ Antes de trabajar, lee:
 3. [Índice técnico](docs/README.md) y los documentos relevantes para la tarea.
 4. [Criterios de código](docs/criterios-de-codigo.md): legibilidad, alcance incremental, pruebas y documentación de cada funcionalidad.
 
-El registro de robots está implementado con .NET 10, ASP.NET Core y SQLite. El panel web en `src/Switchyard.Api/wwwroot` usa HTML, CSS y módulos JavaScript, se sirve desde la API y consulta los registros cada cinco segundos con la pestaña visible. La coordinación y la simulación siguen en fase de propuesta. El acceso móvil con roles es opcional y futuro; adaptar el diseño a móvil no implementa autenticación ni permisos. No des por elegidas tecnologías pendientes ni presentes funciones previstas como implementadas.
+El registro de robots está implementado con .NET 10, ASP.NET Core y SQLite. El panel web en `src/Switchyard.Api/wwwroot` usa HTML, CSS y módulos JavaScript, se sirve desde la API y permite registrar robots, crear tareas y consultar ambas listas cada cinco segundos con la pestaña visible. `http-client.js` y `collection-panel.js` comparten transporte y ciclo de consulta entre las dos páginas. Las tareas de transporte ya se crean, asignan y completan desde la API y la consola; la coordinación espacial y la simulación siguen pendientes. El acceso móvil con roles es opcional y futuro; adaptar el diseño a móvil no implementa autenticación ni permisos. No des por elegidas tecnologías pendientes ni presentes funciones previstas como implementadas.
 
 ## Flujo esperado
 
 - Revisa `git status`, la rama actual y los cambios existentes antes de editar. Conserva el trabajo del usuario o de otros colaboradores.
 - Consulta la issue de la tarea. Si no existe y el encargo incluye implementarla en el repositorio, crea una issue acotada antes de empezar. Usa responsables acordados y cuentas verificadas; no inventes el usuario de Carlos.
-- Trabaja en una rama `<tipo>/<issue>-<descripcion-en-ingles>` creada desde `main` actualizado. No mezcles tareas sin relación.
+- Trabaja en una rama `<tipo>/<issue>-<descripcion-en-ingles>` creada desde `develop` actualizado; el PR de tarea apunta a `develop`. `main` recibe promociones revisadas desde `develop`. No mezcles tareas sin relación.
 - Usa Conventional Commits, con título en inglés y referencia real a la issue al final del título: `tipo(ambito): descripcion [refs #numero]`. Una referencia únicamente en el cuerpo no cumple esta regla. La documentación y las explicaciones al equipo van en español.
 - Completa las comprobaciones pertinentes, revisa el diff y publica la rama y el PR cuando formen parte del encargo. Usa la plantilla de PR y explica resultados y limitaciones reales.
-- Usa `Closes #numero` en el PR solo si completa la issue; para entregas parciales, `Refs: #numero`.
+- Usa `Refs: #numero` en los PR de tareas hacia `develop`. Tras su integración y validación, cierra la issue indicando que está integrada en `develop`, todavía no publicada en `main`. Las promociones hacia `main` enlazan las issues incluidas; `Closes #numero` solo se usa allí para una issue aún abierta que se complete con la promoción.
+- Si una entrega depende de otra pendiente de revisión, puede partir de esa rama y abrir un PR hacia ella, indicando la dependencia. No lo integres en la rama de tarea: espera a que se integre el requisito, incorpora `origin/develop` mediante merge, cambia la base del PR a `develop` y revisa el diff y la CI antes de integrar.
 - La integración requiere revisión humana del compañero. No la simules ni integres automáticamente un PR sin ella y sin autorización para integrar.
 - No hagas force push a `main` o ramas compartidas, no borres trabajo ajeno y no incluyas secretos ni archivos generados innecesarios.
 

@@ -2,6 +2,8 @@
 
 La API puede crear una tarea con un lugar de recogida y un destino. Un robot registrado pide trabajo desde el cliente .NET y confirma la entrega al pulsar Intro. Los lugares son nombres para la demostración. El mapa, el movimiento y la detección de desconexiones quedan para entregas posteriores. [Issue #10](https://github.com/switchyard-project/switchyard/issues/10)
 
+La [siguiente entrega](04-panel-de-tareas.md) añade creación y listado desde el panel. La [demo con panel y consola](../ejecucion.md#demo-completa-del-panel-a-la-consola) utiliza los mismos comandos .NET en macOS, Linux y Windows.
+
 ## Demostración en PowerShell
 
 Desde la raíz del repositorio, compila en Release y arranca la API con un archivo de datos específico para la demostración. Si ya lo usaste y quieres comenzar con una base vacía, elige otro nombre.
@@ -27,6 +29,7 @@ La tarea empieza en `pending`. Mientras el cliente espera Intro, otra terminal o
 | Petición | Resultado |
 | :--- | :--- |
 | `POST /api/tasks` | `201` con la tarea `pending` y una cabecera `Location` con su URL. El JSON requiere `pickup` y `destination`, cada uno con entre 1 y 60 caracteres y algún contenido distinto de espacios. Un cuerpo inválido devuelve `400`. |
+| `GET /api/tasks` | `200` con todas las tareas, ordenadas por identificador ascendente; `[]` si no hay ninguna. Añadido con el panel de tareas (#14). |
 | `GET /api/tasks/{id}` | `200` con la tarea, o `404` si no existe. |
 | `POST /api/robots/{robotId}/tasks/claim` | `200` con la tarea activa del robot o la primera pendiente por identificador. Devuelve `204` si no hay trabajo y `404` si el robot no está registrado. La petición no lleva cuerpo. |
 | `PUT /api/robots/{robotId}/tasks/{id}/completion` | `200` con la tarea `completed`. Devuelve `404` si no existe la tarea y `409` si está pendiente o pertenece a otro identificador. La petición no lleva cuerpo. |
@@ -37,8 +40,8 @@ Las respuestas con una tarea incluyen `id`, `pickup`, `destination`, `status` y 
 
 | Archivo | Métodos que intervienen |
 | :--- | :--- |
-| [TransportTasksController.cs](../../src/Switchyard.Api/Controllers/TransportTasksController.cs) | `Create` recibe la recogida y el destino validados por ASP.NET Core. `GetById` devuelve el estado. `Claim` verifica el alta del robot. `Complete` distingue una tarea inexistente de un conflicto de asignación. |
-| [TransportTaskRepository.cs](../../src/Switchyard.Api/Data/TransportTaskRepository.cs) | `Initialize` crea la tabla e índice si faltan. `Create` inserta la tarea. `GetById` lee su estado. `Claim` elige y asigna en una sola sentencia SQL. `Complete` marca la tarea como terminada si coincide el robot. |
+| [TransportTasksController.cs](../../src/Switchyard.Api/Controllers/TransportTasksController.cs) | `Create` recibe la recogida y el destino validados por ASP.NET Core. `GetById` devuelve el estado; `GetAll` devuelve el listado. `Claim` verifica el alta del robot. `Complete` distingue una tarea inexistente de un conflicto de asignación. |
+| [TransportTaskRepository.cs](../../src/Switchyard.Api/Data/TransportTaskRepository.cs) | `Initialize` crea la tabla e índice si faltan. `Create` inserta la tarea. `GetById` lee su estado y `GetAll` obtiene todos los registros ordenados. `Claim` elige y asigna en una sola sentencia SQL. `Complete` marca la tarea como terminada si coincide el robot. |
 | [RobotApiClient.cs](../../src/Switchyard.Robot/RobotApiClient.cs) | `ClaimTaskAsync` y `CompleteTaskAsync` envían las peticiones y comprueban las respuestas. `ReadTaskAsync` verifica que el servidor devuelve la tarea esperada. |
 | [Program.cs del cliente](../../src/Switchyard.Robot/Program.cs) | `RunTaskAsync` muestra la asignación, espera Intro y envía la confirmación. |
 

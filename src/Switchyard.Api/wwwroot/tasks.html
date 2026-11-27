@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101820">
+    <meta name="description" content="Crea tareas de transporte y sigue sus asignaciones y entregas en Switchyard.">
+    <title>Tareas · Switchyard</title>
+    <link rel="icon" href="/assets/switchyard-avatar.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/styles.css">
+    <script type="module" src="/tasks-dashboard.js"></script>
+</head>
+<body>
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <header class="topbar">
+        <a class="brand" href="/" aria-label="Switchyard, inicio">
+            <img src="/assets/switchyard-avatar.svg" width="40" height="40" alt="">
+            <span>switchyard<span class="brand-caption">CADA ROBOT, A SU DESTINO.</span></span>
+        </a>
+        <span class="workspace-label">Panel del almacén</span>
+    </header>
+
+    <main id="main" class="workspace">
+        <nav class="section-nav" aria-label="Secciones del almacén">
+            <a href="/">Robots</a>
+            <a href="/tasks.html" aria-current="page">Tareas</a>
+        </nav>
+        <div class="page-heading">
+            <div>
+                <p class="eyebrow">EL TRABAJO EN MARCHA</p>
+                <h1>Tareas de transporte</h1>
+                <p class="intro">Crea una tarea y sigue su entrega, paso a paso.</p>
+            </div>
+            <div class="total">
+                <span id="task-count" class="total-number">—</span>
+                <span>tareas guardadas</span>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <section class="register-panel" aria-labelledby="create-heading">
+                <span class="panel-tag">NUEVA TAREA</span>
+                <h2 id="create-heading">De la recogida <br>al destino.</h2>
+                <p>Indica dónde empieza la entrega y a dónde debe llegar.</p>
+                <form id="task-form">
+                    <div class="form-field">
+                        <label for="task-pickup">Lugar de recogida</label>
+                        <input id="task-pickup" name="pickup" placeholder="Ej. Estante A" required maxlength="60"
+                            pattern=".*\S.*" aria-describedby="task-help" disabled>
+                    </div>
+                    <div class="form-field">
+                        <label for="task-destination">Destino</label>
+                        <input id="task-destination" name="destination" placeholder="Ej. Muelle 1" required maxlength="60"
+                            pattern=".*\S.*" aria-describedby="task-help" disabled>
+                    </div>
+                    <p id="task-help" class="field-help">Entre 1 y 60 caracteres por campo. Por ahora son nombres de lugares para la demo.</p>
+                    <button id="create-button" class="primary-button" type="submit" disabled>Crear tarea</button>
+                    <p id="form-message" class="form-message" role="status" aria-live="polite" aria-atomic="true"></p>
+                </form>
+                <div class="registration-note">
+                    <span aria-hidden="true">+</span>
+                    <p>La tarea queda pendiente hasta que un robot solicite trabajo desde la consola.</p>
+                </div>
+            </section>
+
+            <section class="registry-panel" aria-labelledby="tasks-heading">
+                <div class="registry-heading">
+                    <div>
+                        <h2 id="tasks-heading">Recogidas y entregas</h2>
+                        <p>De pendiente a completada, con cada cambio guardado.</p>
+                    </div>
+                    <button id="refresh-button" class="secondary-button" type="button" disabled>Actualizar</button>
+                </div>
+                <div class="sync-bar">
+                    <span id="connection-message" role="status">Consultando el servidor…</span>
+                    <span id="last-updated">Sin consulta completada</span>
+                </div>
+                <p id="list-error" class="list-error" role="alert" hidden></p>
+                <div id="loading-state" class="empty-state"><p>Cargando las tareas…</p></div>
+                <div id="empty-state" class="empty-state" hidden>
+                    <img src="/assets/switchyard-avatar.svg" width="64" height="64" alt="">
+                    <h3>Todo listo para la primera entrega</h3>
+                    <p>Crea una tarea con su recogida y destino. Aquí podrás seguir su estado.</p>
+                </div>
+                <div id="task-list" role="list" aria-label="Tareas del servidor"></div>
+                <p class="list-footnote">Consulta automática cada 5 s con la pestaña visible. Ordenadas por identificador, de la primera a la última.</p>
+            </section>
+        </div>
+
+        <aside class="scope-note" aria-label="Alcance de la demo">
+            <span class="scope-label">ENTREGA SIMULADA</span>
+            <p><strong>El robot confirma desde la consola.</strong> La asignación y la entrega se guardan en el servidor. Todavía no hay movimientos ni rutas; el estado no indica que el robot esté conectado.</p>
+        </aside>
+        <noscript><p class="list-error">Necesitas activar JavaScript para crear tareas y consultar la lista.</p></noscript>
+    </main>
+    <footer class="footer"><span>SWITCHYARD</span><p>Una flota, en sintonía.</p></footer>
+
+    <template id="task-template">
+        <article class="task-row" role="listitem">
+            <div class="task-title"><h3></h3><span class="task-status"></span></div>
+            <dl class="task-route">
+                <div><dt>Recogida</dt><dd class="task-pickup"></dd></div>
+                <div><dt>Destino</dt><dd class="task-destination"></dd></div>
+            </dl>
+            <p class="task-assignment">Robot: <span class="task-robot"></span></p>
+        </article>
+    </template>
+</body>
+</html>
