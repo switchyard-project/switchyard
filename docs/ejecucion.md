@@ -116,7 +116,7 @@ dotnet test Switchyard.sln --configuration Release --no-build
 dotnet format Switchyard.sln --verify-no-changes --no-restore
 ```
 
-Ejecuta primero la compilación si todavía no la has hecho o si has cambiado código. Las pruebas crean archivos SQLite temporales propios, no necesitan una API arrancada y no utilizan la base de la demo. El workflow [`.github/workflows/dotnet.yml`](../.github/workflows/dotnet.yml) ejecuta restauración, compilación, pruebas y revisión de formato en Linux y Windows para los PR hacia `main` y los cambios integrados en esa rama. Su resultado debe consultarse en cada PR; tener el workflow no configura por sí solo un check obligatorio.
+Ejecuta primero la compilación si todavía no la has hecho o si has cambiado código. Las pruebas crean archivos SQLite temporales propios, no necesitan una API arrancada y no utilizan la base de la demo. El workflow [`.github/workflows/dotnet.yml`](../.github/workflows/dotnet.yml) ejecuta restauración, compilación, pruebas y revisión de formato en Linux y Windows para todos los PR y los cambios integrados en `develop` o `main`. Su resultado debe consultarse en cada PR; tener el workflow no configura por sí solo un check obligatorio.
 
 ## Comprobar la interfaz
 

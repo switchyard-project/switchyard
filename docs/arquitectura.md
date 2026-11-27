@@ -100,4 +100,4 @@ El diseño estrecho se comprueba en navegador; una prueba con teléfono físico 
 6. Un escenario de bloqueo que active la política de recuperación o muestre que no hay una salida segura.
 7. Comparación reproducible del cálculo secuencial y paralelo.
 
-Estas comprobaciones de coordinación son objetivos de desarrollo. Ya se han probado el registro y la consulta por HTTP, el rechazo de duplicados simultáneos y la conservación de las altas tras reiniciar. Todavía no hay tareas, movimientos ni reservas que reanudar.
+Estas comprobaciones de coordinación son objetivos de desarrollo. Ya se han probado el registro y la consulta por HTTP, el rechazo de duplicados simultáneos y la conservación de las altas tras reiniciar. También se han probado la asignación y la finalización de tareas, conservadas tras reiniciar. Todavía no hay movimientos ni reservas que reanudar.

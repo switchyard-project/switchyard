@@ -176,7 +176,7 @@ switchyard/
 
 ## Cómo trabajamos
 
-Cada tarea tendrá una issue con responsable, una rama propia y commits que permitan seguir su historia. Los cambios llegarán a `main` mediante un pull request revisado por el compañero. Así podremos saber qué se hizo, por qué y cómo se comprobó.
+Cada tarea tendrá una issue con responsable, una rama propia y commits que permitan seguir su historia. Las ramas de tarea salen de `develop` y vuelven mediante un pull request revisado por el compañero. Cuando el conjunto esté validado, otro PR promociona `develop` a `main`, nuestra versión estable. Así podremos saber qué se hizo, por qué y cómo se comprobó.
 
 La [guía de trabajo](docs/flujo-de-trabajo.md) explica el proceso con ejemplos y recoge la excepción de esta primera entrega de documentación. Incluimos plantillas para facilitar las tareas y revisiones, y un [AGENTS.md](AGENTS.md) para que los asistentes de IA compartan el mismo contexto.
 
