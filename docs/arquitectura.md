@@ -1,22 +1,24 @@
 # Arquitectura del proyecto
 
-**Estado: registro de robots y panel web implementados; coordinación pendiente.** La primera entrega permite registrar y consultar robots mediante una API REST y conservar sus altas en SQLite. El resto de esta arquitectura describe el objetivo de la simulación. Este documento mantiene las decisiones técnicas fuera de la presentación principal.
+**Estado actual.** La API REST guarda altas de robots y tareas de transporte en SQLite. Un robot registrado puede solicitar una tarea y confirmar su entrega simulada. La coordinación espacial sigue pendiente.
 
 ## Lo que existe hoy
 
-- `Switchyard.Api`: ASP.NET Core sobre .NET 10, con controladores para el registro y las consultas.
+- `Switchyard.Api` usa ASP.NET Core sobre .NET 10 y expone el registro y la gestión de tareas.
 - `Switchyard.Api/wwwroot`: panel de registro en HTML, CSS y módulos JavaScript. Usa la misma API REST; consulta cambios cada cinco segundos mientras la pestaña está visible y permite actualizar manualmente.
-- `Switchyard.Robot`: cliente de consola .NET que realiza un alta por HTTP y termina.
+- `Switchyard.Robot` es el cliente de consola .NET. Registra un robot o, con `--work`, pide y completa una tarea por HTTP.
 - `Switchyard.Contracts`: tipos de los mensajes JSON; no contiene lógica de movimiento ni acceso a datos.
 - `Switchyard.Tests`: pruebas xUnit del contrato, el cliente y la persistencia en SQLite real.
 
 El servidor mantiene una tabla `robots` con el identificador y la fecha de alta UTC. La clave primaria impide duplicar registros, incluso ante solicitudes concurrentes. Esto todavía no permite conocer la posición o disponibilidad de un robot. El [documento de la funcionalidad](funcionalidades/01-registro-de-robots.md) recoge el contrato, los métodos y los límites de esta entrega.
 
+La tabla `transport_tasks` guarda la recogida, el destino, el identificador asignado y si se completó la entrega. Cada robot puede tener una tarea activa a la vez y su asignación se conserva al reiniciar. La [guía de tareas](funcionalidades/03-tareas-de-transporte.md) explica el contrato y la asignación concurrente.
+
 ## Punto de partida
 
 Los requisitos de la asignatura son una aplicación distribuida con comunicación cliente-servidor mediante REST o SOAP, conservación del estado y un cliente .NET. La tecnología del frontend es libre.
 
-Usamos REST con JSON. Cada robot es un ejecutable .NET lanzado como un proceso independiente. Ya existe un servidor central para registrar robots; más adelante coordinará sus tareas. SQLite conserva las altas. El panel actual permite registrarlas y consultarlas. La visualización del almacén y los eventos de simulación siguen pendientes.
+Usamos REST con JSON. Cada robot es un ejecutable .NET lanzado como un proceso independiente. El servidor central registra robots y les asigna trabajo. SQLite conserva las altas y el estado de las tareas. El panel actual permite registrar y consultar robots. La visualización del almacén y los eventos de simulación siguen pendientes.
 
 Se podrá demostrar la comunicación entre procesos en un mismo ordenador. La API deberá poder configurarse por dirección para que también sea posible separar clientes y servidor en distintas máquinas.
 
@@ -55,7 +57,7 @@ Compararemos el cálculo secuencial y el paralelo con las mismas peticiones y ma
 
 ## Estado y fallos
 
-La base de datos deberá permitir reconstruir qué tareas estaban pendientes, cuáles estaban asignadas y cuál era el último estado confirmado de cada robot. Queda por decidir cómo almacenar las reservas y cómo reconciliarlas al reiniciar. Guardar datos no significa que sea seguro continuar automáticamente con ellos.
+La base ya conserva el estado y la asignación de cada tarea. Al incorporar movimiento, también deberá conservar el último estado confirmado de cada robot. Queda por decidir cómo almacenar las reservas y cómo reconciliarlas al reiniciar.
 
 Los clientes enviarán señales periódicas de actividad. Un tiempo de espera permitirá marcar un robot como no disponible, pero la falta de respuesta no prueba que haya abandonado su celda. Su última posición y cualquier movimiento sin confirmar deberán mantenerse como ocupación posible hasta resolver la incertidumbre.
 

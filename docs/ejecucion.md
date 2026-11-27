@@ -1,6 +1,6 @@
 # Ejecutar Switchyard
 
-Puedes dar de alta robots y consultar sus registros desde el panel web o el cliente de consola .NET. El cliente hace una petición HTTP y termina; todavía no simula movimientos ni mantiene una conexión de actividad.
+Puedes dar de alta robots y consultar sus registros desde el panel web o el cliente de consola .NET. El cliente también puede pedir y confirmar una entrega simulada. Los movimientos y las señales periódicas de actividad siguen pendientes.
 
 ## Requisitos
 
@@ -74,6 +74,8 @@ Con `dotnet run --project src/Switchyard.Api`, la ruta predeterminada es `src/Sw
 
 Si publicas la API o la ejecutas desde otro directorio, configura una ruta absoluta para mantener clara la ubicación de los datos.
 
+Para comprobar también la persistencia de una asignación y su confirmación, sigue la [demostración de una tarea de transporte](funcionalidades/03-tareas-de-transporte.md#demostración-en-powershell).
+
 ## 5. Mostrar los errores previstos
 
 | Acción | Resultado |
@@ -131,5 +133,3 @@ El frontend no necesita una compilación propia ni dependencias de Node para eje
 | SQLite no puede abrir el archivo | Revisa la ruta y los permisos de escritura de su directorio. |
 | Aparece `409` al repetir la demo | El registro anterior sigue guardado. Usa otro identificador o un archivo nuevo. |
 | El cliente no conecta desde otro ordenador | `localhost` apunta al propio equipo; utiliza la dirección del servidor y comprueba su puerto. |
-
-El siguiente paso se elegirá en otra issue. Antes de avanzar, ambos deberíamos poder ejecutar y explicar este recorrido completo.

@@ -16,7 +16,7 @@
   <a href="docs/README.md">Documentación técnica</a>
 </p>
 
-> **Ya puedes probarlo:** registra robots desde el panel web o desde el cliente .NET y consulta sus altas, guardadas en SQLite. El panel se adapta a pantallas pequeñas y consulta los cambios cada cinco segundos. La simulación, el movimiento y las rutas siguen pendientes.
+> **Ya puedes probarlo:** registra robots desde el panel web o desde el cliente .NET. También puedes crear una tarea por la API y completar una entrega simulada desde la consola. SQLite conserva las altas y las tareas. El mapa, el movimiento y las rutas siguen pendientes.
 
 ## La idea
 
@@ -116,13 +116,13 @@ El mayor riesgo del proyecto es intentar resolver toda la robótica de un almac�
 | :--- | :--- |
 | **0 · Presentarnos al servidor — disponible** | Un cliente .NET registra un robot; la API permite consultarlo y conserva el alta en SQLite. |
 | **0.1 · Un panel para empezar — disponible** | Alta y listado desde el navegador, consultas periódicas y diseño adaptable. |
-| **1 · Una entrega completa** | Un cliente .NET se conecta a la API, recibe una tarea y guarda su progreso en la base de datos. |
+| **1 · Una entrega completa — disponible** | Un cliente .NET pide una tarea y confirma la entrega simulada. La API guarda su estado en SQLite. |
 | **2 · Un almacén compartido** | Varios robots se desplazan con reservas de espacio y esperas visibles. |
 | **3 · Rutas en paralelo** | El servidor calcula varias rutas a la vez; medimos el resultado frente al cálculo secuencial. |
 | **4 · Cuando algo falla** | Introducimos obstáculos y desconexiones, detectamos bloqueos y probamos una recuperación acotada. |
 | **5 · Una demo reproducible** | Arrancamos diez procesos, mostramos el panel y documentamos cómo repetir el escenario. |
 
-El registro y su panel web están implementados; las etapas 1 a 5 siguen previstas. Para la primera versión quedan fuera los robots físicos, los mapas 3D, el aprendizaje automático y la alta disponibilidad del servidor. Preferimos una simulación pequeña que podamos entender, medir y defender bien.
+El registro, el panel y el flujo de una tarea están implementados. Las etapas 2 a 5 siguen previstas. Para la primera versión quedan fuera los robots físicos, los mapas 3D, el aprendizaje automático y la alta disponibilidad del servidor. Preferimos una simulación pequeña que podamos entender, medir y defender bien.
 
 ### Una idea para más adelante: el almacén en el bolsillo
 
@@ -149,7 +149,7 @@ dotnet run --project src/Switchyard.Robot --configuration Release --no-build -- 
 
 El cliente muestra la confirmación y termina. Con el panel visible, el registro aparecerá en una próxima consulta automática; también puedes pulsar **Actualizar**. La [lista en JSON](http://localhost:5080/api/robots) sigue disponible. Si repites el alta de `R01`, la API indica que ya existe; puedes probar con `R02`.
 
-Puedes detener la API con `Ctrl+C`, volver a arrancarla con el mismo comando y consultar de nuevo la lista: el alta seguirá guardada. Todavía no hay robots moviéndose ni detección de desconexiones.
+Puedes detener la API con `Ctrl+C`, volver a arrancarla con el mismo comando y consultar de nuevo la lista para comprobar que el alta sigue guardada. Para crear y completar una tarea desde consola, sigue la [demo de transporte](docs/funcionalidades/03-tareas-de-transporte.md#demostración-en-powershell).
 
 La [guía de ejecución](docs/ejecucion.md) explica las pruebas, la configuración y la demo paso a paso. Para entender el código y preparar la exposición, empieza por [el registro](docs/funcionalidades/01-registro-de-robots.md) y [el panel web](docs/funcionalidades/02-panel-web.md).
 
