@@ -19,6 +19,11 @@ public sealed class WebDashboardTests : IDisposable
     [InlineData("/styles.css", "text/css")]
     [InlineData("/dashboard.js", "text/javascript")]
     [InlineData("/robot-api.js", "text/javascript")]
+    [InlineData("/tasks.html", "text/html")]
+    [InlineData("/task-api.js", "text/javascript")]
+    [InlineData("/tasks-dashboard.js", "text/javascript")]
+    [InlineData("/http-client.js", "text/javascript")]
+    [InlineData("/collection-panel.js", "text/javascript")]
     [InlineData("/assets/switchyard-avatar.svg", "image/svg+xml")]
     public async Task GetPanelResource_ReturnsContentWithExpectedType(string path, string contentType)
     {

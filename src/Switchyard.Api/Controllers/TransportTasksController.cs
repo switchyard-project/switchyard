@@ -33,6 +33,12 @@ public sealed class TransportTasksController : ControllerBase
             : Ok(task);
     }
 
+    [HttpGet]
+    public ActionResult<IReadOnlyList<TransportTaskResponse>> GetAll()
+    {
+        return Ok(_tasks.GetAll());
+    }
+
     [HttpPost("/api/robots/{robotId}/tasks/claim")]
     public ActionResult<TransportTaskResponse> Claim(string robotId)
     {
