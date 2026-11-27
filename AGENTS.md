@@ -11,7 +11,7 @@ Antes de trabajar, lee:
 3. [Índice técnico](docs/README.md) y los documentos relevantes para la tarea.
 4. [Criterios de código](docs/criterios-de-codigo.md): legibilidad, alcance incremental, pruebas y documentación de cada funcionalidad.
 
-El registro de robots está implementado con .NET 10, ASP.NET Core y SQLite. El panel web en `src/Switchyard.Api/wwwroot` usa HTML, CSS y módulos JavaScript, se sirve desde la API y consulta los registros cada cinco segundos con la pestaña visible. Las tareas de transporte ya se crean, asignan y completan desde la API y la consola; la coordinación espacial y la simulación siguen pendientes. El acceso móvil con roles es opcional y futuro; adaptar el diseño a móvil no implementa autenticación ni permisos. No des por elegidas tecnologías pendientes ni presentes funciones previstas como implementadas.
+El registro de robots está implementado con .NET 10, ASP.NET Core y SQLite. El panel web en `src/Switchyard.Api/wwwroot` usa HTML, CSS y módulos JavaScript, se sirve desde la API y permite registrar robots, crear tareas y consultar ambas listas cada cinco segundos con la pestaña visible. `http-client.js` y `collection-panel.js` comparten transporte y ciclo de consulta entre las dos páginas. Las tareas de transporte ya se crean, asignan y completan desde la API y la consola; la coordinación espacial y la simulación siguen pendientes. El acceso móvil con roles es opcional y futuro; adaptar el diseño a móvil no implementa autenticación ni permisos. No des por elegidas tecnologías pendientes ni presentes funciones previstas como implementadas.
 
 ## Flujo esperado
 

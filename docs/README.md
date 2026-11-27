@@ -10,6 +10,7 @@ El [README principal](../README.md) presenta la aplicación. Aquí guardaremos l
 | [01 · Registro de robots](funcionalidades/01-registro-de-robots.md) | Contrato HTTP, recorrido del código, métodos, decisiones, pruebas y preguntas para la exposición. |
 | [02 · Panel web](funcionalidades/02-panel-web.md) | Interfaz adaptable, consultas periódicas, estados de error y decisiones para el futuro acceso móvil. |
 | [03 · Tareas de transporte](funcionalidades/03-tareas-de-transporte.md) | Creación, asignación, finalización y persistencia. Demo de consola y preguntas para la defensa. |
+| [04 · Panel de tareas](funcionalidades/04-panel-de-tareas.md) | Crear tareas, consultar todos los estados y demostrar cambios desde el cliente .NET; módulos compartidos y límites de la interfaz. |
 | [Criterios de código](criterios-de-codigo.md) | Cómo mantener el código sencillo, legible y verificable en las siguientes entregas. |
 | [Cómo trabajamos](flujo-de-trabajo.md) | Responsables, issues, ramas, commits, pull requests y criterios de revisión. Punto de entrada para colaboradores. |
 | [Arquitectura del proyecto](arquitectura.md) | Qué componentes existen y qué sigue propuesto para la coordinación de robots. |
