@@ -163,3 +163,7 @@ La página inicial ahora permite crear o elegir un almacén. Desde su plano pued
 ## Asignar desde el navegador
 
 En **Tareas**, usa **Asignar una tarea** para elegir una entrega pendiente y un robot sin tarea activa. Al ejecutar `--work ID`, ese robot recoge primero la asignación que le has dado. Pulsa Intro en su consola para finalizarla. Consulta [la explicación y la demo](funcionalidades/06-asignacion-desde-la-web.md).
+
+## Perfiles de inicio
+
+La API incluye el perfil `Switchyard.Api` con puerto 5080; el cliente ofrece `Robot.Work` y `Robot.Register`. Para arrancar desde Visual Studio, sigue [la guía de proyectos de inicio](visual-studio.md). En terminal puedes seleccionarlos con `--launch-profile`; los argumentos escritos después de `--` siguen teniendo prioridad.

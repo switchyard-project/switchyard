@@ -133,7 +133,7 @@ El panel ya se diseña para pantallas pequeñas, así que este objetivo no nos o
 
 ## Estado del repositorio y puesta en marcha
 
-Necesitas el **SDK de .NET 10**. Desde la raíz del repositorio, compila y arranca la API en una terminal:
+Necesitas el **SDK de .NET 10**. Si utilizas Visual Studio, empieza por [los perfiles y proyectos de inicio](docs/visual-studio.md). Desde la raíz del repositorio, compila y arranca la API en una terminal:
 
 ```bash
 dotnet build Switchyard.sln --configuration Release

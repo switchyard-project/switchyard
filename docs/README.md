@@ -6,6 +6,7 @@ El [README principal](../README.md) presenta la aplicación. Aquí guardaremos l
 
 | Documento | Qué encontrarás |
 | :--- | :--- |
+| [Arranque en Visual Studio](visual-studio.md) | Proyecto de inicio, perfiles de API y robot, y pasos para la primera entrega. |
 | [Ejecución y primera demo](ejecucion.md) | Requisitos, comandos, configuración, persistencia y resolución de problemas. |
 | [01 · Registro de robots](funcionalidades/01-registro-de-robots.md) | Contrato HTTP, recorrido del código, métodos, decisiones, pruebas y preguntas para la exposición. |
 | [02 · Panel web](funcionalidades/02-panel-web.md) | Interfaz adaptable, consultas periódicas, estados de error y decisiones para el futuro acceso móvil. |

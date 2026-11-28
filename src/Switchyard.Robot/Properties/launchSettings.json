@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Robot.Work": {
+      "commandName": "Project",
+      "commandLineArgs": "--work R01 http://localhost:5080"
+    },
+    "Robot.Register": {
+      "commandName": "Project",
+      "commandLineArgs": "R01 http://localhost:5080"
+    }
+  }
+}
