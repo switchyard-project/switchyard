@@ -210,3 +210,73 @@ test('keeps a rejected draft when another client saves an overlapping zone first
     await page.locator('.zone-entry').filter({ hasText: 'Otro cliente' }).waitFor();
     assert.equal(await page.locator('.map-preview').getAttribute('data-invalid'), 'true');
 });
+
+test('follows the system, preserves the editor when toggled and remembers the choice across pages and tabs', async t => {
+    const { page, context, warehouse } = await fixture(t);
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await page.waitForFunction(() => document.documentElement.dataset.theme === 'dark');
+    await draw(page, warehouse, [2, 2], [3, 3]);
+    await save(page, 'Tema');
+    await draw(page, warehouse, [6, 6], [7, 8]);
+    await page.getByRole('button', { name: 'Activar modo claro', exact: true }).click();
+    assert.equal(await page.locator('#columns').inputValue(), '3');
+    assert.equal(await page.locator('#detail-name').textContent(), 'Tema');
+    assert.equal(await page.locator('.map-preview').isVisible(), true);
+    assert.equal(await page.evaluate(() => localStorage.getItem('switchyard.theme')), 'light');
+    await page.reload();
+    assert.equal(await page.locator('html').getAttribute('data-theme'), 'light');
+    for (const route of ['/', `/robots.html?warehouse=${warehouse.id}`, `/tasks.html?warehouse=${warehouse.id}`]) {
+        await page.goto(baseUrl + route);
+        assert.equal(await page.locator('html').getAttribute('data-theme'), 'light');
+    }
+    const second = await context.newPage();
+    await second.goto(baseUrl);
+    await second.getByRole('button', { name: 'Activar modo oscuro', exact: true }).click();
+    await page.waitForFunction(() => document.documentElement.dataset.theme === 'dark');
+    await page.reload();
+    assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
+});
+
+test('keeps all four pages coherent and accessible in both themes, including task states and mobile widths', async t => {
+    const { page, warehouse } = await fixture(t);
+    await draw(page, warehouse, [2, 2], [3, 3]);
+    await save(page, 'Estantería');
+    const robotId = `THEME-${warehouse.id}`;
+    await post('/api/robots', { id: robotId, warehouseId: warehouse.id });
+    const task = await post('/api/tasks', { pickup: 'A', destination: 'B', warehouseId: warehouse.id });
+    for (const route of [`/api/robots/${robotId}/tasks/claim`, `/api/robots/${robotId}/tasks/${task.id}/completion`]) {
+        const response = await fetch(baseUrl + route, { method: route.endsWith('claim') ? 'POST' : 'PUT' });
+        assert.equal(response.status, 200);
+    }
+    await post('/api/tasks', { pickup: 'C', destination: 'D', warehouseId: warehouse.id });
+    await fetch(`${baseUrl}/api/robots/${robotId}/tasks/claim`, { method: 'POST' });
+    await post('/api/tasks', { pickup: 'E', destination: 'F', warehouseId: warehouse.id });
+    for (const theme of ['dark', 'light']) {
+        await page.evaluate(value => localStorage.setItem('switchyard.theme', value), theme);
+        for (const route of ['/', `/warehouse.html?warehouse=${warehouse.id}`, `/robots.html?warehouse=${warehouse.id}`, `/tasks.html?warehouse=${warehouse.id}`]) {
+            await page.goto(baseUrl + route);
+            await page.waitForFunction(() => document.querySelector('#loading-state').hidden);
+            if (route.includes('warehouse.html')) await page.locator('.map-zone').click();
+            assert.equal(await page.locator('html').getAttribute('data-theme'), theme);
+            const surfaces = await page.evaluate(() => [...document.querySelectorAll('.topbar, .register-panel, .registry-panel, .plan-panel, .zone-form-panel, .zone-details')].map(element => getComputedStyle(element).backgroundColor));
+            assert.equal(new Set(surfaces).size, 1, `${theme} ${route}: inconsistent surfaces`);
+            await page.addScriptTag({ path: require.resolve('axe-core/axe.min.js') });
+            const violations = await page.evaluate(async () => (await axe.run(document, { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21aa'] } })).violations.map(v => ({ id: v.id, targets: v.nodes.map(n => n.target) })));
+            assert.deepEqual(violations, [], `${theme} ${route}`);
+            await page.setViewportSize({ width: 390, height: 844 });
+            assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+            assert.equal(await page.locator('#theme-toggle').isVisible(), true);
+            await page.setViewportSize({ width: 1440, height: 1100 });
+        }
+    }
+});
+
+test('the theme selector still works when local storage is blocked', async t => {
+    const { page } = await fixture(t);
+    await page.addInitScript(() => Object.defineProperty(window, 'localStorage', { get() { throw new DOMException('Blocked', 'SecurityError'); } }));
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await page.reload();
+    assert.equal(await page.locator('html').getAttribute('data-theme'), 'dark');
+    await page.getByRole('button', { name: 'Activar modo claro', exact: true }).click();
+    assert.equal(await page.locator('html').getAttribute('data-theme'), 'light');
+});

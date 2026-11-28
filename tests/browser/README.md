@@ -19,6 +19,6 @@ npm test
 
 En Linux puede ser necesario `npx playwright install --with-deps chromium`. La CI hace estos pasos en Ubuntu. Windows conserva las pruebas .NET; el recorrido de navegador automatizado se ejecuta en Linux y se ha comprobado también en macOS.
 
-Las pruebas cubren dibujo en ambos sentidos, confirmación explícita, persistencia tras recargar, coordenadas manuales, solapamientos, cancelación, fallo de red, foco y selección durante consultas, interacción táctil, planos de 50 × 50 m y conflictos con otro cliente. Axe comprueba un conjunto de reglas WCAG A/AA en la vista móvil; no sustituye una auditoría manual completa ni una prueba con un teléfono físico.
+Las pruebas cubren dibujo en ambos sentidos, confirmación explícita, persistencia tras recargar, coordenadas manuales, solapamientos, cancelación, fallo de red, foco y selección durante consultas, interacción táctil, planos de 50 × 50 m y conflictos con otro cliente. También comprueban ambos temas en las cuatro páginas, preferencia del sistema, navegación y recarga, sincronización entre pestañas y almacenamiento bloqueado. Axe comprueba un conjunto de reglas WCAG A/AA en la vista móvil; no sustituye una auditoría manual completa ni una prueba con un teléfono físico.
 
 Node, Playwright y axe son herramientas de desarrollo. El usuario de Switchyard sigue necesitando solo .NET y un navegador para ejecutar la aplicación.

@@ -54,7 +54,7 @@ El caso de uso se inspira en la logística real. El resultado será un prototipo
 
 ![Editor del almacén de Switchyard con zonas y ficha de características.](docs/assets/warehouse-editor.png)
 
-Dibuja sobre el plano o introduce las medidas en el formulario. Cada celda representa **1 × 1 metro**. Pulsa una estantería, una bahía o un punto de carga para ver sus características. El trazo se guarda cuando tú lo confirmas.
+Dibuja sobre el plano o introduce las medidas en el formulario. Cada celda representa **1 × 1 metro**. Pulsa una estantería, una bahía o un punto de carga para ver sus características. El trazo se guarda cuando tú lo confirmas. Todas las páginas tienen **modo claro y oscuro**; el selector de la cabecera recuerda tu preferencia.
 
 ## Un vistazo al almacén
 

@@ -25,6 +25,8 @@ public sealed class WebDashboardTests : IDisposable
     [InlineData("/warehouse-context.js", "text/javascript")]
     [InlineData("/warehouses-dashboard.js", "text/javascript")]
     [InlineData("/warehouse-dashboard.js", "text/javascript")]
+    [InlineData("/theme.css", "text/css")]
+    [InlineData("/theme.js", "text/javascript")]
     [InlineData("/styles.css", "text/css")]
     [InlineData("/dashboard.js", "text/javascript")]
     [InlineData("/robot-api.js", "text/javascript")]

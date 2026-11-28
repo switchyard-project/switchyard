@@ -1,0 +1,95 @@
+/* Shared semantic colours. Components use these tokens in both themes. */
+:root {
+    color-scheme: light;
+    --canvas: #f4f7fb;
+    --surface: #ffffff;
+    --control: #f1f5f8;
+    --hover: #e8f1ed;
+    --text: #15212d;
+    --muted: #516171;
+    --border: #c9d5df;
+    --control-border: #8194a3;
+    --accent: #216d56;
+    --focus: #216d56;
+    --on-accent: #101820;
+    --success-fill: #e1f4e9;
+    --success-text: #225b42;
+    --warning-fill: #fff0d8;
+    --warning-text: #764708;
+    --info-fill: #e5f0ff;
+    --info-text: #25558a;
+    --error-fill: #fff0ef;
+    --error-text: #982738;
+    --grid-cell: #e2eaf0;
+    --shelf-fill: #dceafa;
+    --shelf-line: #356c9b;
+    --shelf-text: #153b5a;
+    --shelf-pattern: #8dafcd66;
+    --dock-fill: #fff0d6;
+    --dock-line: #956015;
+    --dock-text: #69430c;
+    --charging-fill: #d5f3e6;
+    --charging-line: #24745c;
+    --charging-text: #19533e;
+    --selection: #15212d;
+    --preview-fill: #dcf6ebdd;
+    --preview-text: #144e3c;
+    --preview-line: #24745c;
+    --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%23516171' stroke-width='2'/%3E%3C/svg%3E");
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --canvas: #0b1218;
+    --surface: #13212b;
+    --control: #1a2c39;
+    --hover: #213c3b;
+    --text: #e8eff5;
+    --muted: #a9bbca;
+    --border: #344b5b;
+    --control-border: #668091;
+    --accent: #63e6be;
+    --focus: #7cb8ff;
+    --success-fill: #183d33;
+    --success-text: #abf5db;
+    --warning-fill: #3d3020;
+    --warning-text: #ffdb9f;
+    --info-fill: #1d3a50;
+    --info-text: #a8d4ff;
+    --error-fill: #41232b;
+    --error-text: #ffd5d5;
+    --grid-cell: #243947;
+    --shelf-fill: #2c3f4e;
+    --shelf-line: #7cb8ff;
+    --shelf-text: #e5f1ff;
+    --shelf-pattern: #50667580;
+    --dock-fill: #3d3020;
+    --dock-line: #ffbf69;
+    --dock-text: #ffe4be;
+    --charging-fill: #183d33;
+    --charging-line: #63e6be;
+    --charging-text: #abf5db;
+    --selection: #f4f7fb;
+    --preview-fill: #1d604bcc;
+    --preview-text: #f4fff9;
+    --preview-line: #63e6be;
+    --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%23a9bbca' stroke-width='2'/%3E%3C/svg%3E");
+}
+
+.theme-toggle {
+    flex-shrink: 0;
+    padding: 10px 14px;
+    background: var(--control);
+    color: var(--text);
+    border: 1px solid var(--control-border);
+    border-radius: 24px;
+    font: inherit;
+    font-size: .875rem;
+    min-height: 44px;
+}
+.theme-toggle:hover { background: var(--hover); }
+.topbar .workspace-label { margin-left: auto; }
+@media (max-width: 700px) {
+    .topbar { flex-wrap: wrap; gap: 16px; }
+    .theme-toggle { margin-left: auto; }
+}
