@@ -12,21 +12,21 @@ function isRobot(value) {
         && typeof value.registeredAt === "string" && Number.isFinite(Date.parse(value.registeredAt));
 }
 
-export async function getRobots() {
-    const robots = await requestJson(robotsUrl, {}, errorMessages);
-    if (!Array.isArray(robots) || !robots.every(isRobot)) {
+export async function getRobots(warehouseId = 1) {
+    const robots = await requestJson(`${robotsUrl}?warehouseId=${warehouseId}`, {}, errorMessages);
+    if (!Array.isArray(robots) || !robots.every(robot => isRobot(robot) && robot.warehouseId === warehouseId)) {
         throw new Error("La respuesta del servidor no contiene una lista de robots válida.");
     }
     return robots;
 }
 
-export async function registerRobot(id) {
+export async function registerRobot(id, warehouseId = 1) {
     const robot = await requestJson(robotsUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id })
+        body: JSON.stringify({ id, warehouseId })
     }, errorMessages);
-    if (!isRobot(robot) || robot.id !== id) {
+    if (!isRobot(robot) || robot.warehouseId !== warehouseId || robot.id !== id) {
         throw new Error("El servidor no devolvió el registro esperado.");
     }
     return robot;

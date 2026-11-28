@@ -16,7 +16,7 @@
   <a href="docs/README.md">Documentación técnica</a>
 </p>
 
-> **Ya puedes probarlo:** registra robots desde el panel web o desde el cliente .NET. Crea tareas desde el panel y sigue cómo el cliente .NET las recoge y confirma su entrega simulada. SQLite conserva las altas y las tareas. El mapa, el movimiento y las rutas siguen pendientes.
+> **Ya puedes probarlo:** registra robots desde el panel web o desde el cliente .NET. Crea tareas desde el panel y sigue cómo el cliente .NET las recoge y confirma su entrega simulada. SQLite conserva las altas y las tareas. Ya puedes crear almacenes y dibujar sus zonas. El movimiento y las rutas siguen pendientes.
 
 ## La idea
 
@@ -117,6 +117,7 @@ El mayor riesgo del proyecto es intentar resolver toda la robótica de un almac�
 | **0 · Presentarnos al servidor — disponible** | Un cliente .NET registra un robot; la API permite consultarlo y conserva el alta en SQLite. |
 | **0.1 · Un panel para empezar — disponible** | Alta y listado desde el navegador, consultas periódicas y diseño adaptable. |
 | **1 · Una entrega completa — disponible** | Creamos la tarea en el panel, un cliente .NET la solicita y confirma su entrega; el panel muestra los cambios guardados. |
+| **1.1 · Un espacio propio — disponible** | Creamos almacenes, dibujamos zonas y mantenemos separados sus robots y tareas. |
 | **2 · Un almacén compartido** | Varios robots se desplazan con reservas de espacio y esperas visibles. |
 | **3 · Rutas en paralelo** | El servidor calcula varias rutas a la vez; medimos el resultado frente al cálculo secuencial. |
 | **4 · Cuando algo falla** | Introducimos obstáculos y desconexiones, detectamos bloqueos y probamos una recuperación acotada. |
@@ -139,7 +140,7 @@ dotnet build Switchyard.sln --configuration Release
 dotnet run --project src/Switchyard.Api --configuration Release --no-build -- --urls http://localhost:5080
 ```
 
-Abre [el panel de Switchyard](http://localhost:5080) para registrar robots. La sección **Tareas** permite crear recogidas y destinos y seguir su estado. No necesitas Node ni instalar un frontend aparte.
+Abre [el panel de Switchyard](http://localhost:5080), elige o crea un almacén y entra en **Robots** para registrar sus clientes. La sección **Tareas** permite crear recogidas y destinos y seguir su estado. No necesitas Node ni instalar un frontend aparte.
 
 También puedes registrar un robot desde el cliente .NET. En otra terminal, desde la raíz:
 

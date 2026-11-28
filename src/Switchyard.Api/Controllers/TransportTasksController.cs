@@ -8,18 +8,21 @@ namespace Switchyard.Api.Controllers;
 [Route("api/tasks")]
 public sealed class TransportTasksController : ControllerBase
 {
+    private readonly WarehouseRepository _warehouses;
     private readonly TransportTaskRepository _tasks;
     private readonly RobotRepository _robots;
 
-    public TransportTasksController(TransportTaskRepository tasks, RobotRepository robots)
+    public TransportTasksController(TransportTaskRepository tasks, RobotRepository robots, WarehouseRepository warehouses)
     {
         _tasks = tasks;
         _robots = robots;
+        _warehouses = warehouses;
     }
 
     [HttpPost]
     public ActionResult<TransportTaskResponse> Create(CreateTransportTaskRequest request)
     {
+        if (_warehouses.GetById(request.WarehouseId) is null) return NotFound();
         var task = _tasks.Create(request);
         return CreatedAtAction(nameof(GetById), new { id = task.Id }, task);
     }
@@ -34,9 +37,10 @@ public sealed class TransportTasksController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IReadOnlyList<TransportTaskResponse>> GetAll()
+    public ActionResult<IReadOnlyList<TransportTaskResponse>> GetAll(long warehouseId = 1)
     {
-        return Ok(_tasks.GetAll());
+        if (_warehouses.GetById(warehouseId) is null) return NotFound();
+        return Ok(_tasks.GetAll(warehouseId));
     }
 
     [HttpPost("/api/robots/{robotId}/tasks/claim")]

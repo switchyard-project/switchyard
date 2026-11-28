@@ -17,14 +17,17 @@
             <img src="/assets/switchyard-avatar.svg" width="40" height="40" alt="">
             <span>switchyard<span class="brand-caption">CADA ROBOT, A SU DESTINO.</span></span>
         </a>
-        <span class="workspace-label">Panel del almacén</span>
+        <span class="workspace-label" id="warehouse-name">Cargando almacén…</span>
     </header>
 
     <main id="main" class="workspace">
         <nav class="section-nav" aria-label="Secciones del almacén">
-            <a href="/">Robots</a>
-            <a href="/tasks.html" aria-current="page">Tareas</a>
+            <a href="/">Almacenes</a>
+            <a data-warehouse-link href="/warehouse.html">Plano</a>
+            <a data-warehouse-link href="/robots.html">Robots</a>
+            <a data-warehouse-link href="/tasks.html" aria-current="page">Tareas</a>
         </nav>
+        <p id="context-error" class="list-error" role="alert" hidden></p>
         <div class="page-heading">
             <div>
                 <p class="eyebrow">EL TRABAJO EN MARCHA</p>

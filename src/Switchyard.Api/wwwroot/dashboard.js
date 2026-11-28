@@ -1,3 +1,4 @@
+import { loadWarehouseContext } from "./warehouse-context.js";
 import { getRobots, registerRobot } from "./robot-api.js";
 import { mountCollectionPanel } from "./collection-panel.js";
 
@@ -20,11 +21,12 @@ function renderRobots(robots) {
 }
 
 
-mountCollectionPanel({
+const warehouse = await loadWarehouseContext();
+if (warehouse) mountCollectionPanel({
     form: document.querySelector("#register-form"),
-    load: getRobots,
+    load: () => getRobots(warehouse.id),
     render: renderRobots,
-    create: data => registerRobot(data.get("id")),
+    create: data => registerRobot(data.get("id"), warehouse.id),
     createdMessage: robot => `${robot.id} registrado. Su alta ya está guardada en el servidor.`,
     uncertaintyMessage: "Si la respuesta no llegó, actualiza la lista antes de repetir el alta."
 });

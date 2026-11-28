@@ -8,17 +8,20 @@ namespace Switchyard.Api.Controllers;
 [Route("api/robots")]
 public sealed class RobotsController : ControllerBase
 {
+    private readonly WarehouseRepository _warehouses;
     private readonly RobotRepository _robots;
 
-    public RobotsController(RobotRepository robots)
+    public RobotsController(RobotRepository robots, WarehouseRepository warehouses)
     {
         _robots = robots;
+        _warehouses = warehouses;
     }
 
     [HttpPost]
     public ActionResult<RobotResponse> Register(RegisterRobotRequest request)
     {
-        var robot = new RobotResponse(request.Id, DateTimeOffset.UtcNow);
+        if (_warehouses.GetById(request.WarehouseId) is null) return NotFound();
+        var robot = new RobotResponse(request.Id, DateTimeOffset.UtcNow, request.WarehouseId);
         if (!_robots.TryAdd(robot))
         {
             return Problem(
@@ -45,8 +48,9 @@ public sealed class RobotsController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IReadOnlyList<RobotResponse>> GetAll()
+    public ActionResult<IReadOnlyList<RobotResponse>> GetAll(long warehouseId = 1)
     {
-        return Ok(_robots.GetAll());
+        if (_warehouses.GetById(warehouseId) is null) return NotFound();
+        return Ok(_robots.GetAll(warehouseId));
     }
 }

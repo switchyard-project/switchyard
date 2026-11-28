@@ -7,10 +7,11 @@ builder.Services.AddProblemDetails();
 builder.Services.AddSingleton(services => new RobotRepository(GetDatabasePath(services)));
 builder.Services.AddSingleton(services => new TransportTaskRepository(GetDatabasePath(services)));
 
+builder.Services.AddSingleton(services => new WarehouseRepository(GetDatabasePath(services)));
+
 var app = builder.Build();
 
-app.Services.GetRequiredService<RobotRepository>().Initialize();
-app.Services.GetRequiredService<TransportTaskRepository>().Initialize();
+DatabaseInitializer.Initialize(GetDatabasePath(app.Services));
 app.UseExceptionHandler();
 app.UseDefaultFiles();
 app.UseStaticFiles();

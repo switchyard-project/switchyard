@@ -1,3 +1,4 @@
+import { loadWarehouseContext } from "./warehouse-context.js";
 import { getTasks, createTask } from "./task-api.js";
 import { mountCollectionPanel } from "./collection-panel.js";
 
@@ -22,11 +23,12 @@ function renderTasks(tasks) {
     document.querySelector("#task-count").textContent = tasks.length;
 }
 
-mountCollectionPanel({
+const warehouse = await loadWarehouseContext();
+if (warehouse) mountCollectionPanel({
     form: document.querySelector("#task-form"),
-    load: getTasks,
+    load: () => getTasks(warehouse.id),
     render: renderTasks,
-    create: data => createTask(data.get("pickup"), data.get("destination")),
+    create: data => createTask(data.get("pickup"), data.get("destination"), warehouse.id),
     createdMessage: task => `Tarea #${task.id} creada. Ya está pendiente de asignación.`,
     uncertaintyMessage: "Si no recibiste confirmación, actualiza y comprueba la lista antes de crear otra: podría haberse guardado."
 });

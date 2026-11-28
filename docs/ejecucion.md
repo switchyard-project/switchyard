@@ -155,3 +155,7 @@ El frontend no necesita una compilación propia ni dependencias de Node para eje
 | SQLite no puede abrir el archivo | Revisa la ruta y los permisos de escritura de su directorio. |
 | Aparece `409` al repetir la demo | El registro anterior sigue guardado. Usa otro identificador o un archivo nuevo. |
 | El cliente no conecta desde otro ordenador | `localhost` apunta al propio equipo; utiliza la dirección del servidor y comprueba su puerto. |
+
+## Elegir el almacén antes de trabajar
+
+La página inicial ahora permite crear o elegir un almacén. Desde su plano puedes entrar en **Robots** y **Tareas**. Para repetir las demos anteriores, elige **Almacén de demostración**: el cliente de alta por consola y las peticiones sin `warehouseId` siguen usando ese almacén. Para otro almacén, registra el robot desde su panel; `--work ID` obtiene el contexto del registro. La [demo de almacenes y zonas](funcionalidades/05-almacenes-y-zonas.md) explica el flujo completo.

@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#101820" />
+        <meta
+            name="description"
+            content="Registra robots y consulta las altas de tu almacén en Switchyard."
+        />
+        <title>Plano · Switchyard</title>
+        <link
+            rel="icon"
+            href="/assets/switchyard-avatar.svg"
+            type="image/svg+xml"
+        />
+        <link rel="stylesheet" href="/styles.css" />
+        <script type="module" src="/warehouse-dashboard.js"></script>
+    </head>
+    <body>
+        <a class="skip-link" href="#main">Saltar al contenido</a>
+        <header class="topbar">
+            <a class="brand" href="/" aria-label="Switchyard, inicio">
+                <img
+                    src="/assets/switchyard-avatar.svg"
+                    width="40"
+                    height="40"
+                    alt=""
+                />
+                <span
+                    >switchyard<span class="brand-caption"
+                        >CADA ROBOT, A SU DESTINO.</span
+                    ></span
+                >
+            </a>
+            <span class="workspace-label" id="warehouse-name"
+                >Cargando almacén…</span
+            >
+        </header>
+
+        <main id="main" class="workspace">
+            <nav class="section-nav" aria-label="Secciones del almacén">
+                <a href="/">Almacenes</a>
+                <a
+                    data-warehouse-link
+                    href="/warehouse.html"
+                    aria-current="page"
+                    >Plano</a
+                >
+                <a data-warehouse-link href="/robots.html">Robots</a>
+                <a data-warehouse-link href="/tasks.html">Tareas</a>
+            </nav>
+            <p id="context-error" class="list-error" role="alert" hidden></p>
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">UN LUGAR PARA CADA COSA</p>
+                    <h1>Diseña el espacio</h1>
+                    <p class="intro" id="dimensions">
+                        El plano se guarda y comparte con los demás clientes.
+                    </p>
+                </div>
+            </div>
+            <div class="dashboard-grid">
+                <section
+                    class="register-panel"
+                    aria-labelledby="create-heading"
+                >
+                    <span class="panel-tag">AÑADIR UNA ZONA</span>
+                    <h2 id="create-heading">Organiza tu almacén.</h2>
+                    <form id="zone-form">
+                        <div class="form-field">
+                            <label for="name">Nombre de la zona</label
+                            ><input
+                                id="name"
+                                name="name"
+                                type="text"
+                                required
+                                maxlength="60"
+                                pattern=".*\S.*"
+                                placeholder="Ej. Estantería A"
+                                disabled
+                            />
+                        </div>
+                        <div class="form-field">
+                            <label for="kind">Tipo de zona</label
+                            ><select id="kind" name="kind" disabled>
+                                <option value="shelf">Estantería</option>
+                                <option value="dock">Bahía</option>
+                                <option value="charging">Punto de carga</option>
+                            </select>
+                        </div>
+                        <div class="coordinate-fields">
+                            <div class="form-field">
+                                <label for="startRow">Fila inicial</label
+                                ><input
+                                    id="startRow"
+                                    name="startRow"
+                                    type="number"
+                                    required
+                                    min="1"
+                                    max="50"
+                                    value="1"
+                                    disabled
+                                />
+                            </div>
+                            <div class="form-field">
+                                <label for="startColumn">Columna inicial</label
+                                ><input
+                                    id="startColumn"
+                                    name="startColumn"
+                                    type="number"
+                                    required
+                                    min="1"
+                                    max="50"
+                                    value="1"
+                                    disabled
+                                />
+                            </div>
+                            <div class="form-field">
+                                <label for="rows">Alto (filas)</label
+                                ><input
+                                    id="rows"
+                                    name="rows"
+                                    type="number"
+                                    required
+                                    min="1"
+                                    max="50"
+                                    value="1"
+                                    disabled
+                                />
+                            </div>
+                            <div class="form-field">
+                                <label for="columns">Ancho (columnas)</label
+                                ><input
+                                    id="columns"
+                                    name="columns"
+                                    type="number"
+                                    required
+                                    min="1"
+                                    max="50"
+                                    value="1"
+                                    disabled
+                                />
+                            </div>
+                        </div>
+                        <p class="field-help">
+                            Las coordenadas empiezan en 1, desde arriba a la
+                            izquierda. Las zonas no pueden solaparse ni salir
+                            del plano.
+                        </p>
+                        <button class="primary-button" type="submit" disabled>
+                            Añadir zona
+                        </button>
+                        <p
+                            id="form-message"
+                            class="form-message"
+                            role="status"
+                            aria-live="polite"
+                        ></p>
+                    </form>
+                </section>
+                <section class="registry-panel" aria-labelledby="list-heading">
+                    <div class="registry-heading">
+                        <h2 id="list-heading">Plano del almacén</h2>
+                        <button
+                            id="refresh-button"
+                            class="secondary-button"
+                            type="button"
+                            disabled
+                        >
+                            Actualizar
+                        </button>
+                    </div>
+                    <div class="sync-bar">
+                        <span id="connection-message" role="status"
+                            >Consultando…</span
+                        ><span id="last-updated">Sin consulta completada</span>
+                    </div>
+                    <p
+                        id="list-error"
+                        class="list-error"
+                        role="alert"
+                        hidden
+                    ></p>
+                    <div id="loading-state" class="empty-state">Cargando…</div>
+                    <p id="empty-state" class="empty-state" hidden>
+                        Todavía no hay registros. Crea el primero con el
+                        formulario.
+                    </p>
+                    <div
+                        id="warehouse-map"
+                        class="warehouse-map"
+                        role="img"
+                        aria-label="Plano del almacén, descrito en la lista de zonas"
+                    ></div>
+                    <p class="map-legend">
+                        Estantería · Bahía · Punto de carga<br />Las celdas
+                        libres representan pasillos.
+                    </p>
+                    <div id="zone-list"></div>
+                </section>
+            </div>
+            <aside class="scope-note">
+                <span class="scope-label">PRIMER PLANO</span>
+                <p>
+                    Este plano describe el espacio. Los robots todavía no se
+                    mueven y las zonas no calculan rutas ni comprueban que todos
+                    los pasillos sean accesibles. En esta entrega se añaden
+                    zonas; la edición y el borrado quedan para después.
+                </p>
+            </aside>
+          <noscript><p class="list-error">Activa JavaScript para consultar y configurar los almacenes.</p></noscript>
+    </main>
+        <footer class="footer">
+            <span>SWITCHYARD</span>
+            <p>Una flota, en sintonía.</p>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101820">
+    <meta name="description" content="Registra robots y consulta las altas de tu almacén en Switchyard.">
+    <title>Robots · Switchyard</title>
+    <link rel="icon" href="/assets/switchyard-avatar.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/styles.css">
+    <script type="module" src="/dashboard.js"></script>
+</head>
+<body>
+    <a class="skip-link" href="#main">Saltar al contenido</a>
+    <header class="topbar">
+        <a class="brand" href="/" aria-label="Switchyard, inicio">
+            <img src="/assets/switchyard-avatar.svg" width="40" height="40" alt="">
+            <span>switchyard<span class="brand-caption">CADA ROBOT, A SU DESTINO.</span></span>
+        </a>
+        <span class="workspace-label" id="warehouse-name">Cargando almacén…</span>
+    </header>
+
+    <main id="main" class="workspace">
+        <nav class="section-nav" aria-label="Secciones del almacén">
+            <a href="/">Almacenes</a>
+            <a data-warehouse-link href="/warehouse.html">Plano</a>
+            <a data-warehouse-link href="/robots.html" aria-current="page">Robots</a>
+            <a data-warehouse-link href="/tasks.html">Tareas</a>
+        </nav>
+        <p id="context-error" class="list-error" role="alert" hidden></p>
+        <div class="page-heading">
+            <div>
+                <p class="eyebrow">EL PUNTO DE PARTIDA</p>
+                <h1>Registro de robots</h1>
+                <p class="intro">Da de alta un robot y consulta los registros de tu almacén.</p>
+            </div>
+            <div class="total">
+                <span id="robot-count" class="total-number">—</span>
+                <span>robots registrados</span>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <section class="register-panel" aria-labelledby="register-heading">
+                <span class="panel-tag">NUEVO REGISTRO</span>
+                <h2 id="register-heading">Un robot más. <br>Todo en su sitio.</h2>
+                <p>Elige un identificador único para reconocerlo en el almacén.</p>
+                <form id="register-form">
+                    <label for="robot-id">Identificador del robot</label>
+                    <input id="robot-id" name="id" placeholder="Ej. ROBOT-01" required maxlength="32"
+                        pattern="[A-Z0-9][A-Z0-9_\-]{0,31}" autocomplete="off" autocapitalize="characters"
+                        spellcheck="false" aria-describedby="id-help" disabled>
+                    <p id="id-help" class="field-help">De 1 a 32 caracteres: A–Z, 0–9, guion o guion bajo. Empieza por una letra o un número.</p>
+                    <button id="register-button" class="primary-button" type="submit" disabled>Registrar robot</button>
+                    <p id="form-message" class="form-message" role="status" aria-live="polite" aria-atomic="true"></p>
+                </form>
+                <div class="registration-note">
+                    <span aria-hidden="true">+</span>
+                    <p>El alta queda guardada, aunque cierres esta página o reinicies el servidor.</p>
+                </div>
+            </section>
+
+            <section class="registry-panel" aria-labelledby="registry-heading">
+                <div class="registry-heading">
+                    <div>
+                        <h2 id="registry-heading">Robots registrados</h2>
+                        <p>Los mismos datos, desde cualquier cliente.</p>
+                    </div>
+                    <button id="refresh-button" class="secondary-button" type="button" disabled>Actualizar</button>
+                </div>
+                <div class="sync-bar">
+                    <span id="connection-message" role="status">Consultando el servidor…</span>
+                    <span id="last-updated">Sin consulta completada</span>
+                </div>
+                <p id="list-error" class="list-error" role="alert" hidden></p>
+                <div id="loading-state" class="empty-state"><p>Cargando los registros…</p></div>
+                <div id="empty-state" class="empty-state" hidden>
+                    <img src="/assets/switchyard-avatar.svg" width="64" height="64" alt="">
+                    <h3>Tu primer robot empieza aquí</h3>
+                    <p>Aún no hay registros. Usa el formulario o da de alta un robot desde el cliente de consola.</p>
+                </div>
+                <div id="robot-list" class="robot-list" role="list" aria-label="Registros del servidor"></div>
+                <p class="list-footnote">Consulta automática cada 5 s con la pestaña visible. Las fechas se muestran en la hora de tu dispositivo.</p>
+            </section>
+        </div>
+
+        <aside class="scope-note" aria-label="Alcance del panel">
+            <span class="scope-label">PASO A PASO</span>
+            <p><strong>Registrado no significa conectado.</strong> Este panel muestra altas guardadas. La actividad, los movimientos y las rutas llegarán en próximas entregas.</p>
+        </aside>
+        <noscript><p class="list-error">Necesitas activar JavaScript para registrar robots y consultar la lista.</p></noscript>
+    </main>
+    <footer class="footer"><span>SWITCHYARD</span><p>Una flota, en sintonía.</p></footer>
+
+    <template id="robot-template">
+        <article class="robot-row" role="listitem">
+            <span class="robot-icon" aria-hidden="true">R</span>
+            <div class="robot-details"><h3></h3><p>Alta: <time></time></p></div>
+            <span class="record-label">Registrado</span>
+        </article>
+    </template>
+</body>
+</html>
