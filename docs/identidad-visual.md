@@ -63,3 +63,7 @@ Los SVG usan una pila de fuentes de sistema (`Segoe UI`, Arial y sans-serif), si
 - [Paleta](assets/switchyard-palette.svg): colores con sus nombres y valores.
 
 Los originales son gráficos vectoriales editables; el isotipo incluye además las exportaciones PNG descritas arriba. Mantendremos los textos alternativos al insertarlos en documentos y evitaremos añadir dependencias externas para mostrar la identidad.
+
+## Modos de color del panel
+
+Las cuatro páginas usan una paleta semántica compartida en `theme.css`. El modo claro combina superficies blancas con texto oscuro; el oscuro usa fondos azul noche y texto claro. Los controles, las fichas, el plano y los mensajes consumen las mismas variables por función. Los tipos de zona mantienen azul, ámbar y menta con nombre y símbolo, sin depender solo del color. La [guía de modos de color](funcionalidades/08-modos-claro-y-oscuro.md) explica la preferencia y sus pruebas.

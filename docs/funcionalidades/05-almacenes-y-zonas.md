@@ -4,6 +4,8 @@ Antes de registrar robots, elegimos dónde vamos a trabajar. La página inicial 
 
 Es un primer paso hacia un simulador configurable para distintas empresas. No es una plataforma de control de robots físicos ni un sistema de cuentas por empresa: los almacenes separan el trabajo, pero no son una barrera de permisos.
 
+El [editor visual](07-editor-visual-del-almacen.md) amplía esta entrega: permite dibujar por arrastre y consultar fichas. La escala actual es 1 × 1 metro por celda; ancho y largo se muestran en metros.
+
 ## Una demo corta
 
 1. Arranca la API como indica [la guía](../ejecucion.md) y abre `/`.

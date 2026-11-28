@@ -9,9 +9,9 @@ function renderWarehouses(warehouses) {
         const title = document.createElement("h3");
         title.textContent = warehouse.name;
         const detail = document.createElement("p");
-        detail.textContent = `${warehouse.rows} filas × ${warehouse.columns} columnas · ${warehouse.robotCount} robots registrados`;
+        detail.textContent = `${warehouse.columns} m de ancho × ${warehouse.rows} m de largo · ${warehouse.robotCount} robots registrados`;
         const action = document.createElement("span");
-        action.textContent = "Abrir almacén →";
+        action.textContent = "Abrir almacén";
         card.append(title, detail, action);
         return card;
     });

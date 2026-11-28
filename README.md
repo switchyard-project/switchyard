@@ -16,7 +16,7 @@
   <a href="docs/README.md">Documentación técnica</a>
 </p>
 
-> **Ya puedes probarlo:** registra robots desde el panel web o desde el cliente .NET. Crea tareas, elige qué robot las recibe desde la web y sigue cómo el cliente .NET las recoge y confirma su entrega simulada. SQLite conserva las altas y las tareas. Ya puedes crear almacenes y dibujar sus zonas. El movimiento y las rutas siguen pendientes.
+> **Ya puedes probarlo:** registra robots desde el panel web o desde el cliente .NET. Crea tareas, elige qué robot las recibe desde la web y sigue cómo el cliente .NET las recoge y confirma su entrega simulada. SQLite conserva las altas y las tareas. Ya puedes crear almacenes, dibujar sus zonas arrastrando y pulsarlas para ver sus medidas en metros. El movimiento y las rutas siguen pendientes.
 
 ## La idea
 
@@ -49,6 +49,12 @@ El caso de uso se inspira en la logística real. El resultado será un prototipo
 ![Panel de tareas de Switchyard con una tarea completada, otra asignada y otra pendiente.](docs/assets/tasks-desktop.png)
 
 *Captura real con datos de demostración. En **Robots** registras los clientes; en **Tareas** preparas recogidas y destinos y sigues sus estados. Los datos permanecen al reiniciar. Un registro o una asignación no prueban que el robot siga conectado.*
+
+## Diseñar el almacén
+
+![Editor del almacén de Switchyard con zonas y ficha de características.](docs/assets/warehouse-editor.png)
+
+Dibuja sobre el plano o introduce las medidas en el formulario. Cada celda representa **1 × 1 metro**. Pulsa una estantería, una bahía o un punto de carga para ver sus características. El trazo se guarda cuando tú lo confirmas. Todas las páginas tienen **modo claro y oscuro**; el selector de la cabecera recuerda tu preferencia.
 
 ## Un vistazo al almacén
 

@@ -16,3 +16,6 @@
 TestResults/
 **/TestResults/
 *.trx
+
+# Optional browser test dependencies
+tests/browser/node_modules/
