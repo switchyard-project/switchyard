@@ -16,7 +16,7 @@
   <a href="docs/README.md">Documentación técnica</a>
 </p>
 
-> **Ya puedes probarlo:** registra robots desde el panel web o desde el cliente .NET. Crea tareas desde el panel y sigue cómo el cliente .NET las recoge y confirma su entrega simulada. SQLite conserva las altas y las tareas. Ya puedes crear almacenes y dibujar sus zonas. El movimiento y las rutas siguen pendientes.
+> **Ya puedes probarlo:** registra robots desde el panel web o desde el cliente .NET. Crea tareas, elige qué robot las recibe desde la web y sigue cómo el cliente .NET las recoge y confirma su entrega simulada. SQLite conserva las altas y las tareas. Ya puedes crear almacenes y dibujar sus zonas. El movimiento y las rutas siguen pendientes.
 
 ## La idea
 

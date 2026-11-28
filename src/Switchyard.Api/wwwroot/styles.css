@@ -668,3 +668,11 @@ select:focus-visible { outline: 3px solid #7cb8ff; outline-offset: 3px; }
     .warehouse-map { margin: 12px; }
     .workspace-label { display: none; }
 }
+
+.assignment-panel { margin-top: 28px; padding: 28px; background: #fff; border: 1px solid #dbe2e8; border-radius: 16px; }
+.assignment-panel p { line-height: 1.6; }
+.assignment-form { display: grid; grid-template-columns: 1fr 1fr auto; align-items: end; gap: 20px; }
+.assignment-form > div { min-width: 0; }
+.assignment-form label { display: block; margin-bottom: 8px; font-weight: 700; }
+.assignment-form select { text-overflow: ellipsis; }
+@media (max-width: 700px) { .assignment-form { grid-template-columns: 1fr; } }

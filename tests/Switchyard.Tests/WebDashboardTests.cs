@@ -26,6 +26,7 @@ public sealed class WebDashboardTests : IDisposable
     [InlineData("/dashboard.js", "text/javascript")]
     [InlineData("/robot-api.js", "text/javascript")]
     [InlineData("/tasks.html", "text/html")]
+    [InlineData("/task-assignment.js", "text/javascript")]
     [InlineData("/task-api.js", "text/javascript")]
     [InlineData("/tasks-dashboard.js", "text/javascript")]
     [InlineData("/http-client.js", "text/javascript")]

@@ -159,3 +159,7 @@ El frontend no necesita una compilación propia ni dependencias de Node para eje
 ## Elegir el almacén antes de trabajar
 
 La página inicial ahora permite crear o elegir un almacén. Desde su plano puedes entrar en **Robots** y **Tareas**. Para repetir las demos anteriores, elige **Almacén de demostración**: el cliente de alta por consola y las peticiones sin `warehouseId` siguen usando ese almacén. Para otro almacén, registra el robot desde su panel; `--work ID` obtiene el contexto del registro. La [demo de almacenes y zonas](funcionalidades/05-almacenes-y-zonas.md) explica el flujo completo.
+
+## Asignar desde el navegador
+
+En **Tareas**, usa **Asignar una tarea** para elegir una entrega pendiente y un robot sin tarea activa. Al ejecutar `--work ID`, ese robot recoge primero la asignación que le has dado. Pulsa Intro en su consola para finalizarla. Consulta [la explicación y la demo](funcionalidades/06-asignacion-desde-la-web.md).

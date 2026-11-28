@@ -35,3 +35,18 @@ export async function createTask(pickup, destination, warehouseId = 1) {
     }
     return task;
 }
+
+export async function assignTask(id, robotId, warehouseId) {
+    const task = await requestJson(`${tasksUrl}/${id}/assignment`, {
+        method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ robotId })
+    }, {
+        400: "Revisa el identificador del robot.",
+        404: "La tarea o el robot ya no están disponibles. Actualiza la lista.",
+        409: "No se pudo asignar: el robot tiene otra tarea, la tarea ya cambió o pertenecen a almacenes distintos. Actualiza las listas."
+    });
+    if (!isTask(task) || task.id !== id || task.robotId !== robotId
+        || task.status !== "assigned" || task.warehouseId !== warehouseId) {
+        throw new Error("No se recibió la asignación esperada.");
+    }
+    return task;
+}

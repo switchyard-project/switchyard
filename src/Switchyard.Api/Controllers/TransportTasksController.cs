@@ -55,6 +55,18 @@ public sealed class TransportTasksController : ControllerBase
         return task is null ? NoContent() : Ok(task);
     }
 
+    [HttpPut("{id:long}/assignment")]
+    public ActionResult<TransportTaskResponse> Assign(long id, AssignTransportTaskRequest request)
+    {
+        if (_tasks.GetById(id) is null || _robots.GetById(request.RobotId) is null)
+            return Problem(statusCode: 404, title: "No se ha encontrado la tarea o el robot.");
+
+        var task = _tasks.Assign(id, request.RobotId);
+        return task is not null ? Ok(task) : Problem(statusCode: 409,
+            title: "No se puede asignar la tarea.",
+            detail: "Deben pertenecer al mismo almacén, la tarea debe estar pendiente y el robot libre. Una asignación idéntica se puede repetir mientras siga activa.");
+    }
+
     [HttpPut("/api/robots/{robotId}/tasks/{id:long}/completion")]
     public ActionResult<TransportTaskResponse> Complete(string robotId, long id)
     {

@@ -106,6 +106,28 @@ public sealed class TransportTaskRepository
         return reader.Read() ? ReadTask(reader) : null;
     }
 
+    public TransportTaskResponse? Assign(long id, string robotId)
+    {
+        using var connection = new SqliteConnection(_connectionString);
+        connection.Open();
+        using var command = connection.CreateCommand();
+        // One atomic write competes safely with Claim and other manual assignments.
+        command.CommandText = """
+            UPDATE transport_tasks SET robot_id = $robotId
+            WHERE id = $id AND completed = 0 AND (robot_id IS NULL OR robot_id = $robotId)
+                AND warehouse_id = (SELECT warehouse_id FROM robots WHERE id = $robotId)
+                AND NOT EXISTS (
+                    SELECT 1 FROM transport_tasks other
+                    WHERE other.robot_id = $robotId AND other.completed = 0 AND other.id <> $id
+                )
+            RETURNING id, pickup, destination, robot_id, completed, warehouse_id;
+            """;
+        command.Parameters.AddWithValue("$id", id);
+        command.Parameters.AddWithValue("$robotId", robotId);
+        using var reader = command.ExecuteReader();
+        return reader.Read() ? ReadTask(reader) : null;
+    }
+
     public TransportTaskResponse? Complete(long id, string robotId)
     {
         using var connection = new SqliteConnection(_connectionString);
