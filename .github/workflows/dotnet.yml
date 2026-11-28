@@ -30,3 +30,18 @@ jobs:
         run: dotnet test Switchyard.sln --configuration Release --no-build
       - name: Check formatting
         run: dotnet format Switchyard.sln --verify-no-changes --no-restore
+      - name: Set up Node for browser checks
+        if: runner.os == 'Linux'
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+      - name: Install browser test dependencies
+        if: runner.os == 'Linux'
+        run: npm ci --prefix tests/browser
+      - name: Install Chromium
+        if: runner.os == 'Linux'
+        working-directory: tests/browser
+        run: npx playwright install --with-deps chromium
+      - name: Test the warehouse editor in Chromium
+        if: runner.os == 'Linux'
+        run: npm test --prefix tests/browser

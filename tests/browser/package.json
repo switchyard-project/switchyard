@@ -1,0 +1,11 @@
+{
+  "name": "switchyard-browser-tests",
+  "private": true,
+  "scripts": {
+    "test": "node --test warehouse-editor.test.cjs"
+  },
+  "devDependencies": {
+    "axe-core": "4.14.1",
+    "playwright": "1.65.1"
+  }
+}

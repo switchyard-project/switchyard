@@ -655,17 +655,9 @@ select:focus-visible { outline: 3px solid #7cb8ff; outline-offset: 3px; }
 .warehouse-card span { font-weight: 700; color: #1c654e; }
 .coordinate-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .coordinate-fields input { min-width: 0; }
-.warehouse-map { display: grid; margin: 24px; max-height: 650px; border: 1px solid #71808c; background: #f4f7fb; }
-.map-cell { border: 1px solid #dbe2e8; min-width: 0; min-height: 0; }
-.map-zone { display: flex; align-items: center; justify-content: center; border: 1px solid #101820; font-weight: 800; color: #101820; z-index: 1; overflow: hidden; font-size: clamp(10px, 2vw, 16px); }
-.map-zone.shelf { background: #7cb8ff; }
-.map-zone.dock { background: #ffbf69; }
-.map-zone.charging { background: #63e6be; }
-.map-legend, .zone-description { margin: 16px 24px; line-height: 1.6; overflow-wrap: anywhere; }
 .workspace-label { max-width: 45%; overflow-wrap: anywhere; }
 @media (max-width: 700px) {
     .section-nav { flex-wrap: wrap; }
-    .warehouse-map { margin: 12px; }
     .workspace-label { display: none; }
 }
 

@@ -1,4 +1,5 @@
-export function mountCollectionPanel({ form, load, render, create, createdMessage, uncertaintyMessage }) {
+export function mountCollectionPanel({ form, load, render, create, createdMessage, uncertaintyMessage,
+    onCreated = () => {}, onSubmittingChange = () => {} }) {
     const inputs = [...form.querySelectorAll("input, select")];
     const submitButton = form.querySelector("button[type=submit]");
     const submitLabel = submitButton.textContent;
@@ -14,6 +15,7 @@ export function mountCollectionPanel({ form, load, render, create, createdMessag
     let currentRefresh = null;
 
     function updateControls() {
+        onSubmittingChange(isSubmitting);
         refreshButton.disabled = isLoading || isSubmitting;
         submitButton.disabled = isSubmitting;
         inputs.forEach(input => { input.disabled = isSubmitting; });
@@ -69,6 +71,7 @@ export function mountCollectionPanel({ form, load, render, create, createdMessag
             formMessage.textContent = createdMessage(record);
             formMessage.dataset.state = "success";
             form.reset();
+            onCreated(record);
             created = true;
         } catch (error) {
             formMessage.textContent = `${error.message} ${uncertaintyMessage}`;

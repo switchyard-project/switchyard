@@ -14,6 +14,7 @@ El [README principal](../README.md) presenta la aplicación. Aquí guardaremos l
 | [04 · Panel de tareas](funcionalidades/04-panel-de-tareas.md) | Crear tareas, consultar todos los estados y demostrar cambios desde el cliente .NET; módulos compartidos y límites de la interfaz. |
 | [05 · Almacenes y zonas](funcionalidades/05-almacenes-y-zonas.md) | Planos configurables, separación de trabajo, migración y preguntas para la defensa. |
 | [06 · Asignación desde la web](funcionalidades/06-asignacion-desde-la-web.md) | Elección de robot, concurrencia con la consola y defensa de las decisiones. |
+| [07 · Editor visual](funcionalidades/07-editor-visual-del-almacen.md) | Dibujo por arrastre, fichas, escala en metros y pruebas del navegador. |
 | [Criterios de código](criterios-de-codigo.md) | Cómo mantener el código sencillo, legible y verificable en las siguientes entregas. |
 | [Cómo trabajamos](flujo-de-trabajo.md) | Responsables, issues, ramas, commits, pull requests y criterios de revisión. Punto de entrada para colaboradores. |
 | [Arquitectura del proyecto](arquitectura.md) | Qué componentes existen y qué sigue propuesto para la coordinación de robots. |
