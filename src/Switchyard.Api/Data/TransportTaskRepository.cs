@@ -18,27 +18,6 @@ public sealed class TransportTaskRepository
         }.ToString();
     }
 
-    public void Initialize()
-    {
-        using var connection = new SqliteConnection(_connectionString);
-        connection.Open();
-
-        using var command = connection.CreateCommand();
-        command.CommandText = """
-            CREATE TABLE IF NOT EXISTS transport_tasks (
-                id INTEGER PRIMARY KEY,
-                pickup TEXT NOT NULL,
-                destination TEXT NOT NULL,
-                robot_id TEXT REFERENCES robots(id),
-                completed INTEGER NOT NULL DEFAULT 0
-                    CHECK (completed = 0 OR (completed = 1 AND robot_id IS NOT NULL))
-            );
-            CREATE UNIQUE INDEX IF NOT EXISTS transport_tasks_active_robot
-                ON transport_tasks (robot_id) WHERE completed = 0;
-            """;
-        command.ExecuteNonQuery();
-    }
-
     public TransportTaskResponse Create(CreateTransportTaskRequest request)
     {
         var pickup = request.Pickup.Trim();
@@ -49,15 +28,16 @@ public sealed class TransportTaskRepository
 
         using var command = connection.CreateCommand();
         command.CommandText = """
-            INSERT INTO transport_tasks (pickup, destination)
-            VALUES ($pickup, $destination)
+            INSERT INTO transport_tasks (pickup, destination, warehouse_id)
+            VALUES ($pickup, $destination, $warehouseId)
             RETURNING id;
             """;
+        command.Parameters.AddWithValue("$warehouseId", request.WarehouseId);
         command.Parameters.AddWithValue("$pickup", pickup);
         command.Parameters.AddWithValue("$destination", destination);
 
         var id = (long)command.ExecuteScalar()!;
-        return new TransportTaskResponse(id, pickup, destination, TransportTaskResponse.Pending, null);
+        return new TransportTaskResponse(id, pickup, destination, TransportTaskResponse.Pending, null, request.WarehouseId);
     }
 
     public TransportTaskResponse? GetById(long id)
@@ -67,7 +47,7 @@ public sealed class TransportTaskRepository
 
         using var command = connection.CreateCommand();
         command.CommandText = """
-            SELECT id, pickup, destination, robot_id, completed
+            SELECT id, pickup, destination, robot_id, completed, warehouse_id
             FROM transport_tasks
             WHERE id = $id;
             """;
@@ -77,18 +57,20 @@ public sealed class TransportTaskRepository
         return reader.Read() ? ReadTask(reader) : null;
     }
 
-    public IReadOnlyList<TransportTaskResponse> GetAll()
+    public IReadOnlyList<TransportTaskResponse> GetAll(long warehouseId = 1)
     {
         using var connection = new SqliteConnection(_connectionString);
         connection.Open();
 
         using var command = connection.CreateCommand();
         command.CommandText = """
-            SELECT id, pickup, destination, robot_id, completed
+            SELECT id, pickup, destination, robot_id, completed, warehouse_id
             FROM transport_tasks
+            WHERE warehouse_id = $warehouseId
             ORDER BY id;
             """;
 
+        command.Parameters.AddWithValue("$warehouseId", warehouseId);
         using var reader = command.ExecuteReader();
         var tasks = new List<TransportTaskResponse>();
         while (reader.Read())
@@ -111,14 +93,37 @@ public sealed class TransportTaskRepository
             SET robot_id = $robotId
             WHERE id = (
                 SELECT id FROM transport_tasks
-                WHERE completed = 0 AND (robot_id = $robotId OR robot_id IS NULL)
+                WHERE warehouse_id = (SELECT warehouse_id FROM robots WHERE id = $robotId)
+                    AND completed = 0 AND (robot_id = $robotId OR robot_id IS NULL)
                 ORDER BY robot_id IS NULL, id
                 LIMIT 1
             )
-            RETURNING id, pickup, destination, robot_id, completed;
+            RETURNING id, pickup, destination, robot_id, completed, warehouse_id;
             """;
         command.Parameters.AddWithValue("$robotId", robotId);
 
+        using var reader = command.ExecuteReader();
+        return reader.Read() ? ReadTask(reader) : null;
+    }
+
+    public TransportTaskResponse? Assign(long id, string robotId)
+    {
+        using var connection = new SqliteConnection(_connectionString);
+        connection.Open();
+        using var command = connection.CreateCommand();
+        // One atomic write competes safely with Claim and other manual assignments.
+        command.CommandText = """
+            UPDATE transport_tasks SET robot_id = $robotId
+            WHERE id = $id AND completed = 0 AND (robot_id IS NULL OR robot_id = $robotId)
+                AND warehouse_id = (SELECT warehouse_id FROM robots WHERE id = $robotId)
+                AND NOT EXISTS (
+                    SELECT 1 FROM transport_tasks other
+                    WHERE other.robot_id = $robotId AND other.completed = 0 AND other.id <> $id
+                )
+            RETURNING id, pickup, destination, robot_id, completed, warehouse_id;
+            """;
+        command.Parameters.AddWithValue("$id", id);
+        command.Parameters.AddWithValue("$robotId", robotId);
         using var reader = command.ExecuteReader();
         return reader.Read() ? ReadTask(reader) : null;
     }
@@ -133,7 +138,7 @@ public sealed class TransportTaskRepository
             UPDATE transport_tasks
             SET completed = 1
             WHERE id = $id AND robot_id = $robotId
-            RETURNING id, pickup, destination, robot_id, completed;
+            RETURNING id, pickup, destination, robot_id, completed, warehouse_id;
             """;
         command.Parameters.AddWithValue("$id", id);
         command.Parameters.AddWithValue("$robotId", robotId);
@@ -150,6 +155,6 @@ public sealed class TransportTaskRepository
             : robotId is null ? TransportTaskResponse.Pending : TransportTaskResponse.Assigned;
 
         return new TransportTaskResponse(
-            reader.GetInt64(0), reader.GetString(1), reader.GetString(2), status, robotId);
+            reader.GetInt64(0), reader.GetString(1), reader.GetString(2), status, robotId, reader.GetInt64(5));
     }
 }

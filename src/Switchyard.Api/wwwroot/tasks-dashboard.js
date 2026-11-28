@@ -1,3 +1,6 @@
+import { getRobots } from "./robot-api.js";
+import { mountAssignmentForm } from "./task-assignment.js";
+import { loadWarehouseContext } from "./warehouse-context.js";
 import { getTasks, createTask } from "./task-api.js";
 import { mountCollectionPanel } from "./collection-panel.js";
 
@@ -19,14 +22,25 @@ function renderTasks(tasks) {
         rows.append(row);
     }
     taskList.replaceChildren(rows);
+    assignment.update(tasks, robots);
     document.querySelector("#task-count").textContent = tasks.length;
 }
 
-mountCollectionPanel({
-    form: document.querySelector("#task-form"),
-    load: getTasks,
-    render: renderTasks,
-    create: data => createTask(data.get("pickup"), data.get("destination")),
-    createdMessage: task => `Tarea #${task.id} creada. Ya está pendiente de asignación.`,
-    uncertaintyMessage: "Si no recibiste confirmación, actualiza y comprueba la lista antes de crear otra: podría haberse guardado."
-});
+const warehouse = await loadWarehouseContext();
+let robots = [];
+let assignment;
+if (warehouse) {
+    const panel = mountCollectionPanel({
+        form: document.querySelector("#task-form"),
+        load: async () => {
+            const [tasks, latestRobots] = await Promise.all([getTasks(warehouse.id), getRobots(warehouse.id)]);
+            robots = latestRobots;
+            return tasks;
+        },
+        render: renderTasks,
+        create: data => createTask(data.get("pickup"), data.get("destination"), warehouse.id),
+        createdMessage: task => `Tarea #${task.id} creada. Ya está pendiente de asignación.`,
+        uncertaintyMessage: "Si no recibiste confirmación, actualiza y comprueba la lista antes de crear otra: podría haberse guardado."
+    });
+    assignment = mountAssignmentForm(warehouse.id, panel.refresh);
+}

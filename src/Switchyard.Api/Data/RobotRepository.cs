@@ -6,35 +6,17 @@ namespace Switchyard.Api.Data;
 
 public sealed class RobotRepository
 {
-    private readonly string _databasePath;
     private readonly string _connectionString;
 
     public RobotRepository(string databasePath)
     {
-        _databasePath = databasePath;
         _connectionString = new SqliteConnectionStringBuilder
         {
             DataSource = databasePath,
             Pooling = false,
-            DefaultTimeout = 5
+            DefaultTimeout = 5,
+            ForeignKeys = true
         }.ToString();
-    }
-
-    public void Initialize()
-    {
-        Directory.CreateDirectory(Path.GetDirectoryName(_databasePath)!);
-        using var connection = new SqliteConnection(_connectionString);
-        connection.Open();
-
-        using var command = connection.CreateCommand();
-        command.CommandText = """
-            PRAGMA journal_mode = WAL;
-            CREATE TABLE IF NOT EXISTS robots (
-                id TEXT PRIMARY KEY NOT NULL,
-                registered_at TEXT NOT NULL
-            );
-            """;
-        command.ExecuteNonQuery();
     }
 
     public bool TryAdd(RobotResponse robot)
@@ -44,11 +26,12 @@ public sealed class RobotRepository
 
         using var command = connection.CreateCommand();
         command.CommandText = """
-            INSERT INTO robots (id, registered_at)
-            VALUES ($id, $registeredAt)
+            INSERT INTO robots (id, registered_at, warehouse_id)
+            VALUES ($id, $registeredAt, $warehouseId)
             ON CONFLICT(id) DO NOTHING;
             """;
         command.Parameters.AddWithValue("$id", robot.Id);
+        command.Parameters.AddWithValue("$warehouseId", robot.WarehouseId);
         command.Parameters.AddWithValue("$registeredAt",
             robot.RegisteredAt.ToString("O", CultureInfo.InvariantCulture));
 
@@ -61,21 +44,22 @@ public sealed class RobotRepository
         connection.Open();
 
         using var command = connection.CreateCommand();
-        command.CommandText = "SELECT id, registered_at FROM robots WHERE id = $id;";
+        command.CommandText = "SELECT id, registered_at, warehouse_id FROM robots WHERE id = $id;";
         command.Parameters.AddWithValue("$id", id);
 
         using var reader = command.ExecuteReader();
         return reader.Read() ? ReadRobot(reader) : null;
     }
 
-    public IReadOnlyList<RobotResponse> GetAll()
+    public IReadOnlyList<RobotResponse> GetAll(long warehouseId = 1)
     {
         using var connection = new SqliteConnection(_connectionString);
         connection.Open();
 
         using var command = connection.CreateCommand();
-        command.CommandText = "SELECT id, registered_at FROM robots ORDER BY id;";
+        command.CommandText = "SELECT id, registered_at, warehouse_id FROM robots WHERE warehouse_id = $warehouseId ORDER BY id;";
 
+        command.Parameters.AddWithValue("$warehouseId", warehouseId);
         using var reader = command.ExecuteReader();
         var robots = new List<RobotResponse>();
         while (reader.Read())
@@ -90,6 +74,6 @@ public sealed class RobotRepository
     {
         return new RobotResponse(
             reader.GetString(0),
-            DateTimeOffset.Parse(reader.GetString(1), CultureInfo.InvariantCulture));
+            DateTimeOffset.Parse(reader.GetString(1), CultureInfo.InvariantCulture), reader.GetInt64(2));
     }
 }

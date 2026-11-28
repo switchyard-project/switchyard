@@ -1,5 +1,5 @@
 export function mountCollectionPanel({ form, load, render, create, createdMessage, uncertaintyMessage }) {
-    const inputs = [...form.querySelectorAll("input")];
+    const inputs = [...form.querySelectorAll("input, select")];
     const submitButton = form.querySelector("button[type=submit]");
     const submitLabel = submitButton.textContent;
     const refreshButton = document.querySelector("#refresh-button");
@@ -97,4 +97,5 @@ export function mountCollectionPanel({ form, load, render, create, createdMessag
 
     updateControls();
     refresh();
+    return { refresh };
 }

@@ -17,14 +17,17 @@
             <img src="/assets/switchyard-avatar.svg" width="40" height="40" alt="">
             <span>switchyard<span class="brand-caption">CADA ROBOT, A SU DESTINO.</span></span>
         </a>
-        <span class="workspace-label">Panel del almacén</span>
+        <span class="workspace-label" id="warehouse-name">Cargando almacén…</span>
     </header>
 
     <main id="main" class="workspace">
         <nav class="section-nav" aria-label="Secciones del almacén">
-            <a href="/">Robots</a>
-            <a href="/tasks.html" aria-current="page">Tareas</a>
+            <a href="/">Almacenes</a>
+            <a data-warehouse-link href="/warehouse.html">Plano</a>
+            <a data-warehouse-link href="/robots.html">Robots</a>
+            <a data-warehouse-link href="/tasks.html" aria-current="page">Tareas</a>
         </nav>
+        <p id="context-error" class="list-error" role="alert" hidden></p>
         <div class="page-heading">
             <div>
                 <p class="eyebrow">EL TRABAJO EN MARCHA</p>
@@ -59,7 +62,7 @@
                 </form>
                 <div class="registration-note">
                     <span aria-hidden="true">+</span>
-                    <p>La tarea queda pendiente hasta que un robot solicite trabajo desde la consola.</p>
+                    <p>La tarea queda pendiente hasta que la asignes aquí o un robot solicite trabajo desde la consola.</p>
                 </div>
             </section>
 
@@ -86,6 +89,19 @@
                 <p class="list-footnote">Consulta automática cada 5 s con la pestaña visible. Ordenadas por identificador, de la primera a la última.</p>
             </section>
         </div>
+
+        <section class="assignment-panel" aria-labelledby="assignment-heading">
+            <span class="eyebrow">ELIGE QUIÉN HACE LA ENTREGA</span>
+            <h2 id="assignment-heading">Asignar una tarea</h2>
+            <p>Selecciona una tarea pendiente y un robot sin otra tarea activa en este almacén.</p>
+            <form id="assignment-form" class="assignment-form">
+                <div><label for="assignment-task">Tarea pendiente</label><select id="assignment-task" name="taskId" required disabled><option value="">Cargando tareas…</option></select></div>
+                <div><label for="assignment-robot">Robot disponible</label><select id="assignment-robot" name="robotId" required disabled><option value="">Cargando robots…</option></select></div>
+                <button class="secondary-button" type="submit" disabled>Asignar tarea</button>
+            </form>
+            <p id="assignment-message" role="status" aria-live="polite"></p>
+            <p class="list-footnote">Disponible significa sin tarea activa guardada, no conectado. El cliente .NET recoge su asignación al solicitar trabajo.</p>
+        </section>
 
         <aside class="scope-note" aria-label="Alcance de la demo">
             <span class="scope-label">ENTREGA SIMULADA</span>

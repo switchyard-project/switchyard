@@ -101,3 +101,7 @@ El diseño estrecho se comprueba en navegador; una prueba con teléfono físico 
 7. Comparación reproducible del cálculo secuencial y paralelo.
 
 Estas comprobaciones de coordinación son objetivos de desarrollo. Ya se han probado el registro y la consulta por HTTP, el rechazo de duplicados simultáneos y la conservación de las altas tras reiniciar. También se han probado la asignación y la finalización de tareas, conservadas tras reiniciar. Todavía no hay movimientos ni reservas que reanudar.
+
+## Almacenes configurables implementados
+
+La instalación admite varios almacenes con dimensiones y zonas rectangulares persistidas. Cada robot y tarea pertenece a uno; la reclamación de tareas respeta esa pertenencia. El plano todavía no calcula rutas ni vincula los nombres de recogida y destino a coordenadas. Esta separación organiza el trabajo; no proporciona aislamiento de seguridad entre empresas. Consulta [almacenes y zonas](funcionalidades/05-almacenes-y-zonas.md).
